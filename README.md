@@ -1,16 +1,16 @@
 # 🏺 Storytellers of Faifo
 
-An NFC-powered digital storytelling and e-commerce platform for traditional Vietnamese pottery, built with modern web technologies for a seamless mobile-first experience.
+An NFC-powered digital storytelling and e-commerce platform for traditional Vietnamese pottery, built with a stable and production-ready tech stack for a seamless mobile-first experience.
 
 ## 🚀 Tech Stack
 
 ### Core Framework
-- **[Next.js 15](https://nextjs.org/)** - React framework with App Router
-- **[React 19](https://react.dev/)** - UI library with React Server Components
+- **[Next.js 14](https://nextjs.org/)** - React framework with App Router (Stable Version)
+- **[React 18](https://react.dev/)** - UI library with React Server Components
 - **[TypeScript](https://www.typescriptlang.org/)** - Type-safe JavaScript
 
 ### Styling & UI
-- **[Tailwind CSS v4](https://tailwindcss.com/)** - Utility-first CSS framework
+- **[Tailwind CSS v3.4](https://tailwindcss.com/)** - Utility-first CSS framework
 - **[shadcn/ui](https://ui.shadcn.com/)** - High-quality component library (New York style)
 - **[Framer Motion](https://www.framer.com/motion/)** - Production-ready animation library for React
 - **[Radix UI](https://www.radix-ui.com/)** - Unstyled, accessible UI primitives
@@ -24,7 +24,6 @@ An NFC-powered digital storytelling and e-commerce platform for traditional Viet
 
 ### Development Tools
 - **[pnpm](https://pnpm.io/)** - Fast, disk space efficient package manager
-- **[Turbopack](https://turbo.build/pack)** - Ultra-fast bundler for development
 - **[ESLint](https://eslint.org/)** - Static code analysis
 
 ## 📁 Project Architecture
@@ -55,6 +54,7 @@ faifo/
 │   ├── supabase.ts          # Supabase client configuration
 │   ├── utils.ts             # Common utilities
 │   └── query-client.ts      # TanStack Query configuration
+├── tailwind.config.ts       # Tailwind CSS configuration with Custom Ceramic Colors
 └── ...config files
 ```
 ## Module Structure
