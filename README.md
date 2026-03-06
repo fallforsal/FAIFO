@@ -201,15 +201,15 @@ Performance: Turbopack for fast development, optimized production builds.
 Scalability: Feature-based architecture separating content delivery from e-commerce.
 
 ## 📚 Documentation
-- **[CLAUDE.md](https://code.claude.com/docs) - Detailed guidance for AI development
+- **[CLAUDE.md](https://code.claude.com/docs)** - Detailed guidance for AI development
 
 - **[Next.js](https://nextjs.org/docs)** Docs
 
-- **[Supabase](https://supabase.com/docs) ** Docs
+- **[Supabase](https://supabase.com/docs)** Docs
 
-- **[Framer Motion](https://motion.dev) Docs
+- **[Framer Motion](https://motion.dev)** Docs
 
-- [TanStack Query](https://tanstack.com/query/latest) Docs
+- **[TanStack Query](https://tanstack.com/query/latest)** Docs
 
 ## 🤝 Contributing
 Follow the existing module structure.
