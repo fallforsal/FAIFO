@@ -3,14 +3,16 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ProgressBar } from './progress-bar'
-import { PageTransition } from './page-transition'
 import Step1Greeting from './steps/step1-greeting'
-import Step2Pulse from './steps/step2-pulse'
-import Step3Product from './steps/step3-product'
-import Step4Video from './steps/step4-video'
-import Step5Choice from './steps/step5-choice'
+import Step2Vase from './steps/step2-vase'
+import Step3FaifoThanks from './steps/step3-faifo-thanks'
+import Step4BallTransition from './steps/step4-ball-transition'
+import Step5CupWater from './steps/step5-cup-water'
+import Step6ArtisanZoom from './steps/step6-artisan-zoom'
+import Step7Video from './steps/step7-video'
+import Step8Choice from './steps/step8-choice'
 
-const TOTAL_STEPS = 5
+const TOTAL_STEPS = 8
 
 export function StoryContainer() {
   const [currentStep, setCurrentStep] = useState(1)
@@ -32,30 +34,36 @@ export function StoryContainer() {
       case 1:
         return <Step1Greeting onNext={handleNext} />
       case 2:
-        return <Step2Pulse onNext={handleNext} onBack={handleBack} />
+        return <Step2Vase onNext={handleNext} onBack={handleBack} />
       case 3:
-        return <Step3Product onNext={handleNext} onBack={handleBack} />
+        return <Step3FaifoThanks onNext={handleNext} onBack={handleBack} />
       case 4:
-        return <Step4Video onNext={handleNext} onBack={handleBack} />
+        return <Step4BallTransition onNext={handleNext} onBack={handleBack} />
       case 5:
-        return <Step5Choice onBack={handleBack} />
+        return <Step5CupWater onNext={handleNext} onBack={handleBack} />
+      case 6:
+        return <Step6ArtisanZoom onNext={handleNext} onBack={handleBack} />
+      case 7:
+        return <Step7Video onNext={handleNext} onBack={handleBack} />
+      case 8:
+        return <Step8Choice onBack={handleBack} />
       default:
         return null
     }
   }
 
   return (
-    <div className="min-h-screen bg-ceramic-light flex flex-col">
+    <div className="min-h-screen bg-ceramic-beige flex flex-col">
       <ProgressBar currentStep={currentStep} totalSteps={TOTAL_STEPS} />
 
       <AnimatePresence mode="wait">
         <motion.div
           key={currentStep}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.5 }}
-          className="flex-1 flex items-center justify-center px-4 py-8 sm:px-6"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.6 }}
+          className="flex-1 flex items-center justify-center w-full"
         >
           {renderStep()}
         </motion.div>
