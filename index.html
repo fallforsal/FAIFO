@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pottery 2.5D Viewer</title>
+    <style>
+        body { margin: 0; background: #111; overflow: hidden; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+            }
+        }
+    </script>
+
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // 1. Ánh sáng (Quan trọng để thấy khối)
+        const light = new THREE.DirectionalLight(0xffffff, 2);
+        light.position.set(1, 1, 2);
+        scene.add(light);
+        scene.add(new THREE.AmbientLight(0xffffff, 0.5));
+
+        // 2. Load Textures
+        const loader = new THREE.TextureLoader();
+        const colorTexture = loader.load('./public/color_gom.png'); // Ảnh gốc
+        const depthTexture = loader.load('./public/depth_gom.png'); // Ảnh xám
+
+        // 3. Tạo Mesh 2.5D
+        // Cần nhiều segments (512x512) để khối mượt mà
+        const geometry = new THREE.PlaneGeometry(5, 5, 512, 512); 
+        const material = new THREE.MeshStandardMaterial({
+            map: colorTexture,
+            displacementMap: depthTexture,
+            displacementScale: 1.5, // Độ lồi lõm (chỉnh tùy ý)
+            roughness: 0.6,
+            metalness: 0.1
+        });
+
+        const plane = new THREE.Mesh(geometry, material);
+        scene.add(plane);
+
+        camera.position.z = 6;
+        const controls = new OrbitControls(camera, renderer.domElement);
+
+        function animate() {
+            requestAnimationFrame(animate);
+            renderer.render(scene, camera);
+        }
+        animate();
+    </script>
+</body>
+</html>
