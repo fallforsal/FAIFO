@@ -94,30 +94,36 @@ vec2 Drops(vec2 uv, float t, float l0, float l1, float l2) {
 }
 
 void main() {
-    // Chuyển đổi tọa độ
     vec2 fragCoord = vUv * iResolution;
     vec2 uv = (fragCoord.xy - .5 * iResolution.xy) / iResolution.y;
-    vec2 UV = fragCoord.xy / iResolution.xy;
     
     float T = iTime;
-    float t = T * 0.2;
-    float rainAmount = 0.6; // Cố định lượng mưa
     
-    // Tính toán giọt nước
+    // 1. Tốc độ rơi của mưa (0.25 là mượt, không quá chậm)
+    float t = T * 0.25; 
+    
+    // 2. Mưa xuất hiện nhanh hơn ở 3 giây đầu
+    float rainAmount = smoothstep(0.0, 3.0, T) * 0.8; 
+    
     float staticDrops = S(-.5, 1., rainAmount) * 2.;
     float layer1 = S(.25, .75, rainAmount);
     float layer2 = S(.0, .5, rainAmount);
     vec2 c = Drops(uv, t, staticDrops, layer1, layer2);
     
-    // NỀN MÀU KEM (Beige/Cream) thay vì lấy Texture
-    vec3 baseColor = vec3(0.96, 0.94, 0.90); 
+    // 3. MÀU SƯƠNG MÙ: Thay bằng màu Kem/Xám để đồng bộ với màu nền bg-faifo-stone
+    // (Nếu màu faifo-stone là màu kem sáng, dùng dòng dưới này)
+    vec3 glassColor = vec3(0.96, 0.94, 0.90); 
     
-    // Hiệu ứng giọt nước làm tối nền một chút
-    vec3 col = baseColor - (c.x * 0.15) - (c.y * 0.2);
+    // Kính đục dần dựa trên fadeProgress (được bơm từ useFrame bên React)
+    float glassAlpha = smoothstep(0.0, 1.0, fadeProgress);
     
-    // Hiệu ứng mờ dần (Fade out) lúc chuyển cảnh
-    col *= 1.0 - fadeProgress;
+    // Bơm độ rõ nét cho các giọt nước
+    float dropAlpha = clamp((c.x + c.y) * 3.0, 0.0, 1.0);
     
-    gl_FragColor = vec4(col, 1.0);
-}
+    // Kết hợp kính và giọt nước
+    float finalAlpha = clamp(glassAlpha + dropAlpha, 0.0, 1.0);
+    vec3 finalColor = mix(glassColor, vec3(0.6, 0.6, 0.6), c.x * 0.8);
+    
+    gl_FragColor = vec4(finalColor, finalAlpha);
+} 
 `;

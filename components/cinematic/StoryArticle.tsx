@@ -15,7 +15,7 @@ export default function StoryArticle({ onNext }: StoryArticleProps) {
             initial={{ opacity: 0, filter: 'blur(8px)' }}
             animate={{ opacity: 1, filter: 'blur(0px)' }}
             exit={{ opacity: 0, filter: 'blur(6px)' }}
-            transition={{ duration: 0.9, ease: POTTERY_EASE }}
+            transition={{ duration: 1.5, ease: POTTERY_EASE }}
             className="screen-container bg-faifo-stone"
             style={{ justifyContent: 'flex-start', paddingTop: '3rem' }}
         >

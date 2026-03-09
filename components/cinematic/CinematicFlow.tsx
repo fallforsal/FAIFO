@@ -86,14 +86,22 @@ export default function CinematicFlow() {
             {/* ================= WebGL Layer ================= */}
             {/* Only mounted for pottery + rain. Unmounts completely after rain. */}
             {showCanvas && (
-                <div className="fixed inset-0 z-[100]">
-                    {step === 'pottery' && (
-                        <PotteryViewer onExplore={goToRain} />
-                    )}
+                <>
+                    {/* 1. LỚP NỀN: BÌNH GỐM (Luôn hiện ở cả màn pottery và màn rain) */}
+                    <div className="fixed inset-0 z-10">
+                        <PotteryViewer
+                            isTransitioning={step === 'rain'} // Truyền trạng thái để ẩn UI
+                            onExplore={goToRain}
+                        />
+                    </div>
+
+                    {/* 2. LỚP KÍNH MƯA: Chỉ hiện lên đè vào khi bắt đầu mưa */}
                     {step === 'rain' && (
-                        <RainTransition onComplete={goToStory} />
+                        <div className="fixed inset-0 z-50 pointer-events-none">
+                            <RainTransition onComplete={goToStory} />
+                        </div>
                     )}
-                </div>
+                </>
             )}
 
             {/* ================= DOM Layer ================= */}
