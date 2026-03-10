@@ -17,13 +17,13 @@ export default function JournalBook() {
             animate={{ opacity: 1, filter: 'blur(0px)' }}
             exit={{ opacity: 0, filter: 'blur(6px)' }}
             transition={{ duration: 0.9, ease: POTTERY_EASE }}
-            className="screen-container bg-faifo-stone"
+            className="screen-container"
         >
             <MaterialReveal delay={0.3} className="text-center mb-6">
                 <p className="text-xs text-faifo-terracotta tracking-[0.3em] uppercase mb-2">
                     Nhật ký
                 </p>
-                <h2 className="font-serif text-xl text-stone-200">
+                <h2 className="font-serif text-xl text-stone-800">
                     Ký ức của riêng bạn
                 </h2>
             </MaterialReveal>
@@ -134,7 +134,7 @@ export default function JournalBook() {
                             {!isOpen && (
                                 <div className="flex flex-col items-center justify-center h-full gap-4">
                                     <div className="w-16 h-px bg-faifo-terracotta/30" />
-                                    <span className="font-serif text-lg text-stone-300/80 tracking-wide">
+                                    <span className="font-serif text-lg text-stone-700 tracking-wide">
                                         Nhật Ký
                                     </span>
                                     <span className="text-xs text-stone-500/60 tracking-[0.2em]">
@@ -162,7 +162,7 @@ export default function JournalBook() {
                     <motion.button
                         whileTap={{ scale: 0.97 }}
                         onClick={() => setCurrentPage(1)}
-                        className="px-8 py-3 rounded-xl bg-faifo-terracotta/20 border border-faifo-terracotta/40 text-stone-200 text-sm transition-colors duration-500 hover:bg-faifo-terracotta/30"
+                        className="px-8 py-3 rounded-xl bg-faifo-terracotta/20 border border-faifo-terracotta/40 text-stone-800 text-sm transition-colors duration-500 hover:bg-faifo-terracotta/30"
                     >
                         Lưu ký ức ✨
                     </motion.button>

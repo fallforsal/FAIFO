@@ -53,7 +53,7 @@ export default function FlowB2({ onBack }: FlowB2Props) {
                         animate="animate"
                         exit="exit"
                         transition={pageTransition}
-                        className="screen-container bg-faifo-dark"
+                        className="screen-container"
                         onClick={next}
                     >
                         <MaterialReveal delay={0.3} className="mb-6">
@@ -61,13 +61,13 @@ export default function FlowB2({ onBack }: FlowB2Props) {
                         </MaterialReveal>
 
                         <MaterialReveal delay={0.8} className="text-center max-w-xs">
-                            <p className="text-base text-stone-300 leading-relaxed">
+                            <p className="text-base text-stone-800 leading-relaxed">
                                 Chào mừng bạn quay trở lại.
                             </p>
                         </MaterialReveal>
 
                         <MaterialReveal delay={1.4} className="text-center max-w-xs mt-4">
-                            <p className="text-sm text-stone-400 leading-relaxed">
+                            <p className="text-sm text-stone-600 leading-relaxed">
                                 Ký ức của bạn tại{' '}
                                 <span className="text-faifo-terracotta font-serif italic">Faifo</span>
                                 {' '}vẫn luôn được lưu giữ cẩn thận ở đây.
@@ -75,7 +75,7 @@ export default function FlowB2({ onBack }: FlowB2Props) {
                         </MaterialReveal>
 
                         <MaterialReveal delay={2.0} className="text-center max-w-xs mt-6">
-                            <p className="text-xs text-stone-500 leading-relaxed">
+                            <p className="text-xs text-stone-600 leading-relaxed">
                                 Nhấn vào logo 2 lần để mở lại trang nhật ký của mình.
                             </p>
                         </MaterialReveal>
@@ -112,7 +112,7 @@ export default function FlowB2({ onBack }: FlowB2Props) {
                         animate="animate"
                         exit="exit"
                         transition={pageTransition}
-                        className="screen-container bg-faifo-stone"
+                        className="screen-container"
                         onClick={next}
                     >
                         <MaterialReveal delay={0.3} className="mb-4">
@@ -126,10 +126,10 @@ export default function FlowB2({ onBack }: FlowB2Props) {
                         </MaterialReveal>
 
                         <MaterialReveal delay={1.0} className="text-center max-w-xs mt-4">
-                            <h2 className="font-serif text-lg text-stone-200 mb-3">
+                            <h2 className="font-serif text-lg text-stone-800 mb-3">
                                 Mảnh ghép thời gian của riêng bạn
                             </h2>
-                            <p className="text-sm text-stone-500">
+                            <p className="text-sm text-stone-600">
                                 Duy nhất và không thể sao chép.
                             </p>
                         </MaterialReveal>
@@ -145,14 +145,14 @@ export default function FlowB2({ onBack }: FlowB2Props) {
                         animate="animate"
                         exit="exit"
                         transition={pageTransition}
-                        className="screen-container bg-faifo-dark"
+                        className="screen-container"
                     >
                         <MaterialReveal delay={0.5} className="text-center">
                             <span className="text-3xl">📖</span>
                         </MaterialReveal>
 
                         <MaterialReveal delay={1.0} className="text-center max-w-xs mt-6">
-                            <p className="text-sm text-stone-500 mb-4">
+                            <p className="text-sm text-stone-600 mb-4">
                                 Nhật ký ngày {DIARY_DATA.date}
                             </p>
                         </MaterialReveal>
@@ -160,7 +160,7 @@ export default function FlowB2({ onBack }: FlowB2Props) {
                         {/* Typewriter-like slow reveal for diary content */}
                         <MaterialReveal delay={1.8} duration={2.0} className="max-w-xs">
                             <motion.p
-                                className="text-sm text-stone-300 leading-loose text-center italic"
+                                className="text-sm text-stone-800 leading-loose text-center italic"
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
                                 transition={{ duration: 3, ease: POTTERY_EASE }}
@@ -171,7 +171,7 @@ export default function FlowB2({ onBack }: FlowB2Props) {
 
                         {/* Small logo */}
                         <MaterialReveal delay={3.5} className="mt-12">
-                            <div className="w-12 h-12 rounded-full border border-stone-800 flex items-center justify-center">
+                            <div className="w-12 h-12 rounded-full border border-stone-300 flex items-center justify-center">
                                 <span className="font-serif text-xs text-stone-600">CTT</span>
                             </div>
                         </MaterialReveal>

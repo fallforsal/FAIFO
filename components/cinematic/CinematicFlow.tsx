@@ -79,7 +79,7 @@ export default function CinematicFlow() {
     }, [])
 
     return (
-        <div className="relative min-h-screen">
+        <div className="relative min-h-screen" style={{ backgroundColor: '#F5F0E6' }}>
             {/* Progress bar */}
             <ProgressBar current={STEP_PROGRESS[step]} total={TOTAL_STEPS} />
 

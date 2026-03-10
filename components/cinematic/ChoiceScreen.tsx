@@ -16,13 +16,13 @@ export default function ChoiceScreen({ onChoice }: ChoiceScreenProps) {
             animate={{ opacity: 1, filter: 'blur(0px)' }}
             exit={{ opacity: 0, filter: 'blur(6px)' }}
             transition={{ duration: 0.9, ease: POTTERY_EASE }}
-            className="screen-container bg-faifo-dark"
+            className="screen-container"
         >
             <MaterialReveal delay={0.3} className="text-center mb-10">
-                <h2 className="font-serif text-xl text-stone-200 mb-3">
+                <h2 className="font-serif text-xl text-stone-800 mb-3">
                     Bạn muốn làm gì tiếp theo?
                 </h2>
-                <p className="text-sm text-stone-500">
+                <p className="text-sm text-stone-600">
                     Chọn một hành trình cho chiếc gốm của bạn
                 </p>
             </MaterialReveal>
@@ -39,10 +39,10 @@ export default function ChoiceScreen({ onChoice }: ChoiceScreenProps) {
                         <div className="flex items-start gap-4">
                             <span className="text-3xl mt-1">📖</span>
                             <div>
-                                <p className="font-serif text-lg text-stone-200 mb-1">
+                                <p className="font-serif text-lg text-stone-800 mb-1">
                                     Cho Mình
                                 </p>
-                                <p className="text-xs text-stone-500 leading-relaxed">
+                                <p className="text-xs text-stone-600 leading-relaxed">
                                     Viết nhật ký cá nhân — lưu giữ ký ức của riêng bạn cùng chiếc gốm này.
                                 </p>
                             </div>
@@ -56,15 +56,15 @@ export default function ChoiceScreen({ onChoice }: ChoiceScreenProps) {
                         whileTap={{ scale: 0.96, rotateX: 2 }}
                         whileHover={{ scale: 1.02 }}
                         onClick={() => onChoice('letter')}
-                        className="w-full rounded-2xl p-6 text-left bg-gradient-to-br from-stone-800/50 to-stone-900/30 border border-stone-700/40 transition-all duration-500 hover:border-stone-600/50"
+                        className="w-full rounded-2xl p-6 text-left bg-gradient-to-br from-stone-200/60 to-stone-300/30 border border-stone-300/50 transition-all duration-500 hover:border-stone-400/50"
                     >
                         <div className="flex items-start gap-4">
                             <span className="text-3xl mt-1">💌</span>
                             <div>
-                                <p className="font-serif text-lg text-stone-200 mb-1">
+                                <p className="font-serif text-lg text-stone-800 mb-1">
                                     Cho Bạn
                                 </p>
-                                <p className="text-xs text-stone-500 leading-relaxed">
+                                <p className="text-xs text-stone-600 leading-relaxed">
                                     Gửi lời chúc cho một người đặc biệt — kèm theo câu chuyện của Faifo.
                                 </p>
                             </div>

@@ -23,7 +23,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 5,
   userScalable: true,
-  themeColor: '#121212',
+  themeColor: '#F5F0E6',
 }
 
 export default function RootLayout({
@@ -33,7 +33,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="vi" className={`${inter.variable} ${playfair.variable} ${caveat.variable}`}>
-      <body className="antialiased grain-overlay" style={{ backgroundColor: '#F5F0E6', color: '#44403c' }}>
+      <body className="bg-[#F5F0E6] text-stone-800">
         {children}
       </body>
     </html>

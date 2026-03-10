@@ -53,7 +53,7 @@ export default function FlowB1({ onBack }: FlowB1Props) {
                         animate="animate"
                         exit="exit"
                         transition={pageTransition}
-                        className="screen-container bg-faifo-dark"
+                        className="screen-container"
                         onClick={next}
                     >
                         <MaterialReveal delay={0.3} className="mb-6">
@@ -61,21 +61,21 @@ export default function FlowB1({ onBack }: FlowB1Props) {
                         </MaterialReveal>
 
                         <MaterialReveal delay={0.8} className="text-center max-w-xs">
-                            <p className="text-base text-stone-300 leading-relaxed">
+                            <p className="text-base text-stone-800 leading-relaxed">
                                 Xin chào, Mình là{' '}
-                                <span className="font-serif text-stone-200 italic">Chuyện trong tay</span>.
+                                <span className="font-serif text-stone-800 italic">Chuyện trong tay</span>.
                             </p>
                         </MaterialReveal>
 
                         <MaterialReveal delay={1.4} className="text-center max-w-xs mt-4">
-                            <p className="text-sm text-stone-400 leading-relaxed">
+                            <p className="text-sm text-stone-600 leading-relaxed">
                                 <span className="text-faifo-terracotta font-semibold">{GIFT_DATA.senderName}</span>
                                 {' '}vừa nhờ chúng mình gửi đến bạn một món quà đặc biệt từ Hội An.
                             </p>
                         </MaterialReveal>
 
                         <MaterialReveal delay={2.0} className="text-center max-w-xs mt-6">
-                            <p className="text-xs text-stone-500 leading-relaxed">
+                            <p className="text-xs text-stone-600 leading-relaxed">
                                 Hãy nhấn vào logo bên dưới 2 lần để xem món quà đó là gì nhé.
                             </p>
                         </MaterialReveal>
@@ -109,17 +109,17 @@ export default function FlowB1({ onBack }: FlowB1Props) {
                         animate="animate"
                         exit="exit"
                         transition={pageTransition}
-                        className="screen-container bg-faifo-stone"
+                        className="screen-container"
                         onClick={next}
                     >
                         <MaterialReveal delay={0.5} className="text-center max-w-xs">
-                            <h2 className="font-serif text-xl text-stone-200 mb-6">
+                            <h2 className="font-serif text-xl text-stone-800 mb-6">
                                 Câu chuyện phía sau món quà này
                             </h2>
                         </MaterialReveal>
 
                         <MaterialReveal delay={1.0} className="text-center max-w-xs">
-                            <p className="text-sm text-stone-400 leading-loose">
+                            <p className="text-sm text-stone-600 leading-loose">
                                 Ngày xưa, nơi đây còn có tên{' '}
                                 <span className="text-faifo-terracotta font-serif italic">Faifo</span>
                                 {' '} — một thương cảng sầm uất, nơi gốm sứ từ khắp nơi đổ về.
@@ -127,14 +127,14 @@ export default function FlowB1({ onBack }: FlowB1Props) {
                         </MaterialReveal>
 
                         <MaterialReveal delay={1.6} className="text-center max-w-xs mt-4">
-                            <p className="text-sm text-stone-400 leading-loose">
+                            <p className="text-sm text-stone-600 leading-loose">
                                 Mỗi chiếc gốm ở đây đều được nặn bằng tay, bởi những nghệ nhân đã gắn bó với đất sét qua nhiều thế hệ.
                                 Không ai vội vàng. Không ai giống ai.
                             </p>
                         </MaterialReveal>
 
                         <MaterialReveal delay={2.2} className="text-center max-w-xs mt-6">
-                            <p className="text-base text-stone-300 font-serif italic">
+                            <p className="text-base text-stone-800 font-serif italic">
                                 Chiếc này — là của bạn.
                             </p>
                         </MaterialReveal>
@@ -150,26 +150,26 @@ export default function FlowB1({ onBack }: FlowB1Props) {
                         animate="animate"
                         exit="exit"
                         transition={pageTransition}
-                        className="screen-container bg-faifo-dark"
+                        className="screen-container"
                     >
                         <MaterialReveal delay={0.5} className="text-center">
                             <span className="text-3xl">💌</span>
                         </MaterialReveal>
 
                         <MaterialReveal delay={1.0} className="text-center max-w-xs mt-6">
-                            <p className="text-lg font-serif text-stone-200 mb-6">
+                            <p className="text-lg font-serif text-stone-800 mb-6">
                                 Gửi {GIFT_DATA.receiverName}
                             </p>
                         </MaterialReveal>
 
                         <MaterialReveal delay={1.6} className="text-center max-w-xs">
-                            <p className="text-sm text-stone-400 leading-loose italic">
+                            <p className="text-sm text-stone-600 leading-loose italic">
                                 &ldquo;{GIFT_DATA.message}&rdquo;
                             </p>
                         </MaterialReveal>
 
                         <MaterialReveal delay={2.4} className="text-center mt-8">
-                            <p className="text-sm text-stone-400">
+                            <p className="text-sm text-stone-600">
                                 Với tất cả tình cảm,
                             </p>
                             <p className="font-serif text-faifo-terracotta text-lg mt-1">
@@ -179,7 +179,7 @@ export default function FlowB1({ onBack }: FlowB1Props) {
 
                         {/* Small logo */}
                         <MaterialReveal delay={3.0} className="mt-12">
-                            <div className="w-12 h-12 rounded-full border border-stone-800 flex items-center justify-center">
+                            <div className="w-12 h-12 rounded-full border border-stone-300 flex items-center justify-center">
                                 <span className="font-serif text-xs text-stone-600">CTT</span>
                             </div>
                         </MaterialReveal>

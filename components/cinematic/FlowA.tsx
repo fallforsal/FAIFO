@@ -55,16 +55,16 @@ export default function FlowA({ onComplete, onBack }: FlowAProps) {
                         animate="animate"
                         exit="exit"
                         transition={pageTransition}
-                        className="screen-container bg-faifo-dark"
+                        className="screen-container"
                         onClick={next}
                     >
                         <MaterialReveal delay={0.5} className="text-center max-w-xs">
-                            <p className="text-lg text-stone-300 leading-relaxed font-serif">
+                            <p className="text-lg text-stone-800 leading-relaxed font-serif">
                                 Xin Chào.
                             </p>
                         </MaterialReveal>
                         <MaterialReveal delay={1.5} className="text-center max-w-xs mt-4">
-                            <p className="text-base text-stone-400 leading-relaxed">
+                            <p className="text-base text-stone-600 leading-relaxed">
                                 Bạn vừa chạm vào một mảnh ký ức của Hội An.
                             </p>
                         </MaterialReveal>
@@ -82,11 +82,11 @@ export default function FlowA({ onComplete, onBack }: FlowAProps) {
                         animate="animate"
                         exit="exit"
                         transition={pageTransition}
-                        className="screen-container bg-faifo-dark"
+                        className="screen-container"
                         onClick={next}
                     >
                         <MaterialReveal delay={0.3} className="text-center mb-8">
-                            <h1 className="font-serif text-3xl text-stone-200 tracking-tight">
+                            <h1 className="font-serif text-3xl text-stone-800 tracking-tight">
                                 Chuyện trong tay
                             </h1>
                         </MaterialReveal>
@@ -96,7 +96,7 @@ export default function FlowA({ onComplete, onBack }: FlowAProps) {
                         </MaterialReveal>
 
                         <MaterialReveal delay={1.4} className="text-center max-w-xs mt-8">
-                            <p className="text-sm text-stone-400 leading-relaxed">
+                            <p className="text-sm text-stone-600 leading-relaxed">
                                 Cảm ơn bạn đã tin tưởng và chọn mang về một phần của{' '}
                                 <span className="text-faifo-terracotta font-serif italic">Faifo</span>
                                 {' '} — tên cũ của Hội An...
@@ -113,10 +113,10 @@ export default function FlowA({ onComplete, onBack }: FlowAProps) {
                         animate="animate"
                         exit="exit"
                         transition={pageTransition}
-                        className="screen-container bg-faifo-dark"
+                        className="screen-container"
                     >
                         <MaterialReveal delay={0.3} className="text-center mb-6">
-                            <h2 className="font-serif text-xl text-stone-200">
+                            <h2 className="font-serif text-xl text-stone-800">
                                 Bạn đang cầm trên tay —
                             </h2>
                         </MaterialReveal>
@@ -126,7 +126,7 @@ export default function FlowA({ onComplete, onBack }: FlowAProps) {
                         </MaterialReveal>
 
                         <MaterialReveal delay={1.2} className="text-center max-w-xs mt-6">
-                            <p className="text-sm text-stone-500 italic leading-relaxed font-serif">
+                            <p className="text-sm text-stone-600 italic leading-relaxed font-serif">
                                 &ldquo;Chiếc gốm này không chỉ là vật dụng.
                                 <br />
                                 Đó là một người kể chuyện.&rdquo;
@@ -152,12 +152,12 @@ export default function FlowA({ onComplete, onBack }: FlowAProps) {
                         animate="animate"
                         exit="exit"
                         transition={pageTransition}
-                        className="screen-container bg-faifo-stone"
+                        className="screen-container"
                         onClick={next}
                     >
                         {/* Artisan hands placeholder — cinematic dark panel */}
                         <MaterialReveal delay={0.2} className="w-full mb-8">
-                            <div className="w-full h-48 rounded-2xl bg-gradient-to-b from-stone-800/60 to-faifo-dark/80 flex items-center justify-center border border-stone-800/30 overflow-hidden">
+                            <div className="w-full h-48 rounded-2xl bg-gradient-to-b from-stone-200/60 to-stone-300/50 flex items-center justify-center border border-stone-300/50 overflow-hidden">
                                 <motion.div
                                     className="text-center"
                                     animate={{ opacity: [0.3, 0.6, 0.3] }}
@@ -170,13 +170,13 @@ export default function FlowA({ onComplete, onBack }: FlowAProps) {
                         </MaterialReveal>
 
                         <MaterialReveal delay={0.6} className="text-center max-w-xs">
-                            <p className="text-base text-stone-300 leading-loose">
+                            <p className="text-base text-stone-800 leading-loose">
                                 Ra đời từ đất sét...
                             </p>
                         </MaterialReveal>
 
                         <MaterialReveal delay={1.2} className="text-center max-w-xs mt-4">
-                            <p className="text-sm text-stone-500 leading-relaxed">
+                            <p className="text-sm text-stone-600 leading-relaxed">
                                 Mỗi đường nét là quyết định của đôi bàn tay.
                                 Không có chiếc nào giống chiếc nào — giống như không có ai giống ai.
                             </p>
@@ -192,18 +192,18 @@ export default function FlowA({ onComplete, onBack }: FlowAProps) {
                         animate="animate"
                         exit="exit"
                         transition={pageTransition}
-                        className="screen-container bg-faifo-dark"
+                        className="screen-container"
                         onClick={next}
                     >
                         <MaterialReveal delay={0.3} className="text-center mb-6">
-                            <h2 className="font-serif text-xl text-stone-200">
+                            <h2 className="font-serif text-xl text-stone-800">
                                 🎬 Từ đất đến tay bạn
                             </h2>
                         </MaterialReveal>
 
                         {/* Video placeholder */}
                         <MaterialReveal delay={0.7} className="w-full">
-                            <div className="w-full aspect-[9/16] max-h-[50vh] rounded-2xl bg-gradient-to-b from-stone-800/40 to-faifo-dark border border-stone-800/30 flex flex-col items-center justify-center overflow-hidden relative">
+                            <div className="w-full aspect-[9/16] max-h-[50vh] rounded-2xl bg-gradient-to-b from-stone-200/60 to-stone-300/50 border border-stone-300/50 flex flex-col items-center justify-center overflow-hidden relative">
                                 {/* Play button */}
                                 <motion.div
                                     className="w-16 h-16 rounded-full bg-faifo-terracotta/20 border border-faifo-terracotta/30 flex items-center justify-center"
@@ -220,7 +220,7 @@ export default function FlowA({ onComplete, onBack }: FlowAProps) {
                         </MaterialReveal>
 
                         <MaterialReveal delay={1.2} className="text-center max-w-xs mt-6">
-                            <p className="text-sm text-stone-500 leading-relaxed italic font-serif">
+                            <p className="text-sm text-stone-600 leading-relaxed italic font-serif">
                                 Mỗi chiếc gốm là một câu chuyện đang chờ được kể tiếp — bởi chính bạn.
                             </p>
                         </MaterialReveal>
@@ -235,13 +235,13 @@ export default function FlowA({ onComplete, onBack }: FlowAProps) {
                         animate="animate"
                         exit="exit"
                         transition={pageTransition}
-                        className="screen-container bg-faifo-dark"
+                        className="screen-container"
                     >
                         <MaterialReveal delay={0.3} className="text-center mb-10">
-                            <h2 className="font-serif text-xl text-stone-200 mb-3">
+                            <h2 className="font-serif text-xl text-stone-800 mb-3">
                                 Bạn muốn làm gì tiếp theo?
                             </h2>
-                            <p className="text-sm text-stone-500">
+                            <p className="text-sm text-stone-600">
                                 Chọn một hành trình cho chiếc gốm của bạn
                             </p>
                         </MaterialReveal>

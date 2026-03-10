@@ -31,7 +31,7 @@ export default function BrandScreen({ onNext }: BrandScreenProps) {
             animate={{ opacity: 1, filter: 'blur(0px)' }}
             exit={{ opacity: 0, filter: 'blur(6px)' }}
             transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-            className="screen-container bg-faifo-dark cursor-pointer"
+            className="screen-container cursor-pointer"
             onClick={handleAdvance}
         >
             {/* Soundwave ripple behind logo */}
@@ -41,7 +41,7 @@ export default function BrandScreen({ onNext }: BrandScreenProps) {
 
             {/* Brand name */}
             <MaterialReveal delay={0.6} className="text-center mb-2">
-                <h1 className="font-serif text-3xl text-stone-100 tracking-tight">
+                <h1 className="font-serif text-3xl text-stone-800 tracking-tight">
                     Storytellers of Faifo
                 </h1>
             </MaterialReveal>
@@ -54,7 +54,7 @@ export default function BrandScreen({ onNext }: BrandScreenProps) {
 
             {/* Brand description */}
             <MaterialReveal delay={1.5} className="text-center max-w-xs mt-8">
-                <p className="text-sm text-stone-400 leading-relaxed">
+                <p className="text-sm text-stone-600 leading-relaxed">
                     Cảm ơn bạn đã tin tưởng và chọn mang về một phần của{' '}
                     <span className="text-faifo-terracotta font-serif italic">Faifo</span>
                     {' '}— tên cũ của Hội An, nơi những câu chuyện chưa bao giờ thôi được kể.

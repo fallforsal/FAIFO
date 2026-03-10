@@ -52,7 +52,7 @@ export default function InteractiveLogo({
     }, [controls, onExpand])
 
     return (
-        <div className="screen-container bg-faifo-dark">
+        <div className="screen-container">
             <motion.div
                 className="flex flex-col items-center gap-8 cursor-pointer select-none"
                 onClick={handleTap}

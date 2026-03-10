@@ -1,7 +1,11 @@
 import CinematicFlow from "@/components/cinematic/CinematicFlow"
 
-export default function Page(){
+export default function Page() {
 
-return <CinematicFlow/>
+    return (
 
+        <main className="min-h-screen bg-[#F5F0E6]">
+            <CinematicFlow />
+        </main>
+    )
 }

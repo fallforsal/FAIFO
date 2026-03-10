@@ -43,7 +43,7 @@ h6 {
   font-family: var(--font-playfair), serif;
   font-weight: 700;
   letter-spacing: -0.02em;
-  color: var(--faifo-beige);
+  color: #292524;
 }
 
 h1 {
@@ -64,7 +64,7 @@ h3 {
 p {
   font-size: 0.95rem;
   line-height: 1.75;
-  color: var(--faifo-beige-muted);
+  color: #57534e;
 }
 
 /* Cinematic Utilities */

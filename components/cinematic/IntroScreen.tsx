@@ -15,7 +15,7 @@ export default function IntroScreen({ onNext }: IntroScreenProps) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0, filter: 'blur(6px)' }}
             transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-            className="screen-container bg-faifo-dark cursor-pointer"
+            className="screen-container cursor-pointer"
             onClick={onNext}
         >
             {/* Subtle ambient glow */}
@@ -29,13 +29,13 @@ export default function IntroScreen({ onNext }: IntroScreenProps) {
             </div>
 
             <MaterialReveal delay={0.5} className="text-center max-w-xs relative z-10">
-                <p className="text-xl text-stone-200 leading-relaxed font-serif">
+                <p className="text-xl text-stone-800 leading-relaxed font-serif">
                     Xin Chào.
                 </p>
             </MaterialReveal>
 
             <MaterialReveal delay={1.8} className="text-center max-w-xs mt-6 relative z-10">
-                <p className="text-base text-stone-400 leading-relaxed">
+                <p className="text-base text-stone-600 leading-relaxed">
                     Bạn vừa chạm vào một mảnh ký ức của Hội An.
                 </p>
             </MaterialReveal>

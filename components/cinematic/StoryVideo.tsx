@@ -23,18 +23,18 @@ export default function StoryVideo({ onNext }: StoryVideoProps) {
             animate={{ opacity: 1, filter: 'blur(0px)' }}
             exit={{ opacity: 0, filter: 'blur(6px)' }}
             transition={{ duration: 0.9, ease: POTTERY_EASE }}
-            className="screen-container bg-faifo-dark"
+            className="screen-container"
         >
             {/* Title */}
             <MaterialReveal delay={0.3} className="text-center mb-6">
-                <h2 className="font-serif text-xl text-stone-200">
+                <h2 className="font-serif text-xl text-stone-800">
                     🎬 Từ đất đến tay bạn
                 </h2>
             </MaterialReveal>
 
             {/* Video placeholder */}
             <MaterialReveal delay={0.7} className="w-full max-w-sm">
-                <div className="w-full aspect-[9/16] max-h-[50vh] rounded-2xl bg-gradient-to-b from-stone-800/40 to-faifo-dark border border-stone-800/30 flex flex-col items-center justify-center overflow-hidden relative">
+                <div className="w-full aspect-[9/16] max-h-[50vh] rounded-2xl bg-gradient-to-b from-stone-200/60 to-stone-300/50 border border-stone-300/50 flex flex-col items-center justify-center overflow-hidden relative">
                     {/* Animated scene indicators */}
                     <div className="grid grid-cols-2 gap-4 mb-6">
                         {videoScenes.map((scene, i) => (
@@ -82,7 +82,7 @@ export default function StoryVideo({ onNext }: StoryVideoProps) {
 
             {/* End quote */}
             <MaterialReveal delay={1.2} className="text-center max-w-xs mt-6">
-                <p className="text-sm text-stone-400 leading-relaxed italic font-serif">
+                <p className="text-sm text-stone-600 leading-relaxed italic font-serif">
                     "Mỗi chiếc gốm là một câu chuyện đang chờ được kể tiếp — bởi chính bạn."
                 </p>
                 <p className="text-xs text-stone-600 mt-3">

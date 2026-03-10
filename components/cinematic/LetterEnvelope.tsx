@@ -32,13 +32,13 @@ export default function LetterEnvelope() {
             animate={{ opacity: 1, filter: 'blur(0px)' }}
             exit={{ opacity: 0, filter: 'blur(6px)' }}
             transition={{ duration: 0.9, ease: POTTERY_EASE }}
-            className="screen-container bg-faifo-dark"
+            className="screen-container"
         >
             <MaterialReveal delay={0.3} className="text-center mb-6">
                 <p className="text-xs text-faifo-terracotta tracking-[0.3em] uppercase mb-2">
                     Lá thư
                 </p>
-                <h2 className="font-serif text-xl text-stone-200">
+                <h2 className="font-serif text-xl text-stone-800">
                     Gửi lời chúc đến một người bạn
                 </h2>
             </MaterialReveal>
@@ -165,16 +165,16 @@ export default function LetterEnvelope() {
                                 >
                                     <div className="text-center py-6">
                                         <span className="text-4xl">✉️</span>
-                                        <p className="font-handwriting text-xl text-stone-300 mt-4">
+                                        <p className="font-handwriting text-xl text-stone-800 mt-4">
                                             Lá thư đã được gửi đi
                                         </p>
-                                        <p className="text-xs text-stone-500 mt-2 leading-relaxed">
+                                        <p className="text-xs text-stone-600 mt-2 leading-relaxed">
                                             Lời chúc của bạn giờ đã đồng hành<br />
                                             cùng chiếc gốm từ Faifo.
                                         </p>
                                         <div className="mt-6 flex items-center justify-center gap-2">
-                                            <div className="w-8 h-8 rounded-full border border-stone-700 flex items-center justify-center">
-                                                <span className="font-serif text-[8px] text-stone-500">SoF</span>
+                                            <div className="w-8 h-8 rounded-full border border-stone-300 flex items-center justify-center">
+                                                <span className="font-serif text-[8px] text-stone-600">SoF</span>
                                             </div>
                                         </div>
                                     </div>
@@ -191,7 +191,7 @@ export default function LetterEnvelope() {
                     <motion.button
                         whileTap={{ scale: 0.97 }}
                         onClick={handleSubmit}
-                        className="px-8 py-3 rounded-xl bg-faifo-terracotta/20 border border-faifo-terracotta/40 text-stone-200 text-sm transition-colors duration-500 hover:bg-faifo-terracotta/30"
+                        className="px-8 py-3 rounded-xl bg-faifo-terracotta/20 border border-faifo-terracotta/40 text-stone-800 text-sm transition-colors duration-500 hover:bg-faifo-terracotta/30"
                     >
                         Gửi lời chúc ✨
                     </motion.button>
