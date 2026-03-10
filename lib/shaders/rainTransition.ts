@@ -98,32 +98,43 @@ void main() {
     vec2 uv = (fragCoord.xy - .5 * iResolution.xy) / iResolution.y;
     
     float T = iTime;
+    float t = T * 0.25;
     
-    // 1. Tốc độ rơi của mưa (0.25 là mượt, không quá chậm)
-    float t = T * 0.25; 
-    
-    // 2. Mưa xuất hiện nhanh hơn ở 3 giây đầu
-    float rainAmount = smoothstep(0.0, 3.0, T) * 0.8; 
+    // Mưa đọng lại
+    float rainAmount = smoothstep(0.0, 3.0, T) * 0.8;
     
     float staticDrops = S(-.5, 1., rainAmount) * 2.;
     float layer1 = S(.25, .75, rainAmount);
     float layer2 = S(.0, .5, rainAmount);
     vec2 c = Drops(uv, t, staticDrops, layer1, layer2);
     
-    // 3. MÀU SƯƠNG MÙ: Thay bằng màu Kem/Xám để đồng bộ với màu nền bg-faifo-stone
-    // (Nếu màu faifo-stone là màu kem sáng, dùng dòng dưới này)
-    vec3 glassColor = vec3(0.96, 0.94, 0.90); 
+    vec3 glassColor = vec3(0.96, 0.94, 0.90); // Nền màu kem
     
-    // Kính đục dần dựa trên fadeProgress (được bơm từ useFrame bên React)
-    float glassAlpha = smoothstep(0.0, 1.0, fadeProgress);
+    // Sương mù che bình gốm lúc đầu (đục 80%)
+    float fogAlpha = smoothstep(0.0, 3.0, T) * 0.8;
     
-    // Bơm độ rõ nét cho các giọt nước
-    float dropAlpha = clamp((c.x + c.y) * 3.0, 0.0, 1.0);
+    // ==========================================
+    // HIỆU ỨNG CẦN GẠT NƯỚC (WIPER EFFECT)
+    // ==========================================
+    // fadeProgress chạy từ 0.0 đến 1.0 (Nhận từ useFrame)
+    // Cần gạt đi từ lề phải (1.2) sang mép trái (-0.2)
+    float wiperX = 1.2 - fadeProgress * 1.4; 
     
-    // Kết hợp kính và giọt nước
-    float finalAlpha = clamp(glassAlpha + dropAlpha, 0.0, 1.0);
-    vec3 finalColor = mix(glassColor, vec3(0.6, 0.6, 0.6), c.x * 0.8);
+    // Phân định ranh giới: 1.0 = Đã gạt (bên phải), 0.0 = Chưa gạt (bên trái)
+    float wiped = smoothstep(wiperX - 0.05, wiperX + 0.05, vUv.x);
     
-    gl_FragColor = vec4(finalColor, finalAlpha);
+    // Giọt nước bị xóa sổ (nhân với 0) nếu nằm ở bên đã gạt
+    float dropAlpha = clamp((c.x + c.y) * 3.0, 0.0, 1.0) * (1.0 - wiped);
+    
+    // Sau khi gạt đi qua, màn hình biến thành màu Kem đặc 100% (Alpha = 1.0)
+    float finalAlpha = mix(fogAlpha, 1.0, wiped) + dropAlpha;
+    
+    // Tạo một vệt hằn mờ mờ ở mép cần gạt cho chân thực
+    float wiperLine = smoothstep(wiperX + 0.02, wiperX, vUv.x) * smoothstep(wiperX - 0.02, wiperX, vUv.x);
+    
+    vec3 finalColor = mix(glassColor, vec3(0.6), c.x * 0.8 * (1.0 - wiped));
+    finalColor -= wiperLine * 0.04; // Vệt gạt đổ bóng nhẹ
+    
+    gl_FragColor = vec4(finalColor, clamp(finalAlpha, 0.0, 1.0));
 } 
 `;

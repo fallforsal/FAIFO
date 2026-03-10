@@ -68,6 +68,7 @@ export default function PotteryViewer({ onExplore, isTransitioning }: PotteryVie
                 camera={{ position: [0, 0.5, 4], fov: 45 }}
                 style={{ background: '#F5F0E6' }}
             >
+                <color attach="background" args={['#F5F0E6']} />
                 <Suspense fallback={null}>
                     <PotteryModel />
                 </Suspense>

@@ -29,13 +29,13 @@ function RainQuad({ onComplete }: RainTransitionProps) {
         const elapsed = state.clock.getElapsedTime();
         uniforms.current.iTime.value = elapsed;
 
-        // Bắt đầu làm đục kính sương mù sau 4.5 giây
-        if (elapsed > 0.5) {
-            uniforms.current.fadeProgress.value = Math.min((elapsed - 0.5) / 4.5, 1.0);
+        // Từ giây 3.5 đến 5.0 -> Kéo cần gạt (fadeProgress chạy từ 0.0 -> 1.0)
+        if (elapsed > 3.5) {
+            uniforms.current.fadeProgress.value = Math.min((elapsed - 3.5) / 1.5, 1.0);
         }
 
-        // Kết thúc và chuyển cảnh ở giây thứ 6.0
-        if (elapsed > 6.0) {
+        // Giây 5.5 -> Đã gạt sạch bóng, màn hình kem 100%, lúc này chuyển cảnh!
+        if (elapsed > 5.5) {
             completedRef.current = true;
             onComplete();
         }
@@ -68,11 +68,11 @@ export default function RainTransition({ onComplete }: RainTransitionProps) {
     return (
         <div className="fixed inset-0 z-[100] pointer-events-none" style={{ backgroundColor: 'transparent' }}>
             <Canvas
-                gl={{ alpha: true, antialias: false }} // Bật alpha cho Canvas
+                gl={{ alpha: true, antialias: false }}
                 orthographic
                 camera={{ zoom: 1, position: [0, 0, 1], left: -1, right: 1, top: 1, bottom: -1, near: 0.1, far: 10 }}
             >
-                <RainQuad onComplete={handleComplete} />
+                <RainQuad onComplete={onComplete} />
             </Canvas>
         </div>
     )
