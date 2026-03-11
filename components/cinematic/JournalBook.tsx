@@ -13,13 +13,14 @@ export default function JournalBook() {
     return (
         <motion.div
             key="journal"
-            initial={{ opacity: 0, filter: 'blur(8px)' }}
-            animate={{ opacity: 1, filter: 'blur(0px)' }}
-            exit={{ opacity: 0, filter: 'blur(6px)' }}
-            transition={{ duration: 0.9, ease: POTTERY_EASE }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0, transition: { duration: 0.3, ease: 'easeOut' } }}
+            transition={{ duration: 0.6, ease: 'easeInOut' }}
             className="screen-container"
+            style={{ willChange: 'opacity, transform' }}
         >
-            <MaterialReveal delay={0.3} className="text-center mb-6">
+            <MaterialReveal delay={0.2} className="text-center mb-6">
                 <p className="text-xs text-faifo-terracotta tracking-[0.3em] uppercase mb-2">
                     Nhật ký
                 </p>
@@ -29,7 +30,7 @@ export default function JournalBook() {
             </MaterialReveal>
 
             {/* Book container with CSS 3D */}
-            <MaterialReveal delay={0.6} className="w-full max-w-sm">
+            <MaterialReveal delay={0.4} className="w-full max-w-sm">
                 <div className="book-perspective flex justify-center">
                     <div className="relative" style={{ width: 300, height: 400 }}>
                         {/* Book back */}
@@ -157,17 +158,19 @@ export default function JournalBook() {
             </MaterialReveal>
 
             {/* Bottom controls — only when book is open */}
-            {isOpen && currentPage === 0 && (
-                <MaterialReveal delay={0.8} className="mt-6">
-                    <motion.button
-                        whileTap={{ scale: 0.97 }}
-                        onClick={() => setCurrentPage(1)}
-                        className="px-8 py-3 rounded-xl bg-faifo-terracotta/20 border border-faifo-terracotta/40 text-stone-800 text-sm transition-colors duration-500 hover:bg-faifo-terracotta/30"
-                    >
-                        Lưu ký ức ✨
-                    </motion.button>
-                </MaterialReveal>
-            )}
-        </motion.div>
+            {
+                isOpen && currentPage === 0 && (
+                    <MaterialReveal delay={0.6} className="mt-6">
+                        <motion.button
+                            whileTap={{ scale: 0.97 }}
+                            onClick={() => setCurrentPage(1)}
+                            className="px-8 py-3 rounded-xl bg-faifo-terracotta/20 border border-faifo-terracotta/40 text-stone-800 text-sm transition-colors duration-500 hover:bg-faifo-terracotta/30"
+                        >
+                            Lưu ký ức ✨
+                        </motion.button>
+                    </MaterialReveal>
+                )
+            }
+        </motion.div >
     )
 }

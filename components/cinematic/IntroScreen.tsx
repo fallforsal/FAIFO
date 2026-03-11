@@ -13,9 +13,10 @@ export default function IntroScreen({ onNext }: IntroScreenProps) {
             key="intro"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            exit={{ opacity: 0, filter: 'blur(6px)' }}
-            transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+            exit={{ opacity: 0, transition: { duration: 0.3, ease: 'easeOut' } }}
+            transition={{ duration: 0.6, ease: 'easeInOut' }}
             className="screen-container cursor-pointer"
+            style={{ willChange: 'opacity, transform' }}
             onClick={onNext}
         >
             {/* Subtle ambient glow */}
@@ -28,19 +29,19 @@ export default function IntroScreen({ onNext }: IntroScreenProps) {
                 />
             </div>
 
-            <MaterialReveal delay={0.5} className="text-center max-w-xs relative z-10">
+            <MaterialReveal delay={0.2} className="text-center max-w-xs relative z-10">
                 <p className="text-xl text-stone-800 leading-relaxed font-serif">
                     Xin Chào.
                 </p>
             </MaterialReveal>
 
-            <MaterialReveal delay={1.8} className="text-center max-w-xs mt-6 relative z-10">
+            <MaterialReveal delay={0.4} className="text-center max-w-xs mt-6 relative z-10">
                 <p className="text-base text-stone-600 leading-relaxed">
                     Bạn vừa chạm vào một mảnh ký ức của Hội An.
                 </p>
             </MaterialReveal>
 
-            <MaterialReveal delay={3.0} className="mt-10 relative z-10">
+            <MaterialReveal delay={0.6} className="mt-10 relative z-10">
                 <motion.p
                     className="text-xs text-stone-600"
                     animate={{ opacity: [0.3, 0.7, 0.3] }}

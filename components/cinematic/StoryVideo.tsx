@@ -19,21 +19,22 @@ export default function StoryVideo({ onNext }: StoryVideoProps) {
     return (
         <motion.div
             key="video"
-            initial={{ opacity: 0, filter: 'blur(8px)' }}
-            animate={{ opacity: 1, filter: 'blur(0px)' }}
-            exit={{ opacity: 0, filter: 'blur(6px)' }}
-            transition={{ duration: 0.9, ease: POTTERY_EASE }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0, transition: { duration: 0.3, ease: 'easeOut' } }}
+            transition={{ duration: 0.6, ease: 'easeInOut' }}
             className="screen-container"
+            style={{ willChange: 'opacity, transform' }}
         >
             {/* Title */}
-            <MaterialReveal delay={0.3} className="text-center mb-6">
+            <MaterialReveal delay={0.2} className="text-center mb-6">
                 <h2 className="font-serif text-xl text-stone-800">
                     🎬 Từ đất đến tay bạn
                 </h2>
             </MaterialReveal>
 
             {/* Video placeholder */}
-            <MaterialReveal delay={0.7} className="w-full max-w-sm">
+            <MaterialReveal delay={0.4} className="w-full max-w-sm">
                 <div className="w-full aspect-[9/16] max-h-[50vh] rounded-2xl bg-gradient-to-b from-stone-200/60 to-stone-300/50 border border-stone-300/50 flex flex-col items-center justify-center overflow-hidden relative">
                     {/* Animated scene indicators */}
                     <div className="grid grid-cols-2 gap-4 mb-6">
@@ -81,7 +82,7 @@ export default function StoryVideo({ onNext }: StoryVideoProps) {
             </MaterialReveal>
 
             {/* End quote */}
-            <MaterialReveal delay={1.2} className="text-center max-w-xs mt-6">
+            <MaterialReveal delay={0.6} className="text-center max-w-xs mt-6">
                 <p className="text-sm text-stone-600 leading-relaxed italic font-serif">
                     "Mỗi chiếc gốm là một câu chuyện đang chờ được kể tiếp — bởi chính bạn."
                 </p>
@@ -91,7 +92,7 @@ export default function StoryVideo({ onNext }: StoryVideoProps) {
             </MaterialReveal>
 
             {/* Continue */}
-            <MaterialReveal delay={1.8} className="mt-6">
+            <MaterialReveal delay={0.8} className="mt-6">
                 <motion.button
                     whileTap={{ scale: 0.97 }}
                     onClick={onNext}
@@ -100,6 +101,6 @@ export default function StoryVideo({ onNext }: StoryVideoProps) {
                     Tiếp tục →
                 </motion.button>
             </MaterialReveal>
-        </motion.div>
+        </motion.div >
     )
 }

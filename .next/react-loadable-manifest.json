@@ -1,4 +1,34 @@
 {
+  "components\\cinematic\\CinematicFlow.tsx -> @/components/cinematic/BrandScreen": {
+    "id": "components\\cinematic\\CinematicFlow.tsx -> @/components/cinematic/BrandScreen",
+    "files": [
+      "static/chunks/_app-pages-browser_components_cinematic_BrandScreen_tsx.js"
+    ]
+  },
+  "components\\cinematic\\CinematicFlow.tsx -> @/components/cinematic/ChoiceScreen": {
+    "id": "components\\cinematic\\CinematicFlow.tsx -> @/components/cinematic/ChoiceScreen",
+    "files": [
+      "static/chunks/_app-pages-browser_components_cinematic_ChoiceScreen_tsx.js"
+    ]
+  },
+  "components\\cinematic\\CinematicFlow.tsx -> @/components/cinematic/IntroScreen": {
+    "id": "components\\cinematic\\CinematicFlow.tsx -> @/components/cinematic/IntroScreen",
+    "files": [
+      "static/chunks/_app-pages-browser_components_cinematic_IntroScreen_tsx.js"
+    ]
+  },
+  "components\\cinematic\\CinematicFlow.tsx -> @/components/cinematic/JournalBook": {
+    "id": "components\\cinematic\\CinematicFlow.tsx -> @/components/cinematic/JournalBook",
+    "files": [
+      "static/chunks/_app-pages-browser_components_cinematic_JournalBook_tsx.js"
+    ]
+  },
+  "components\\cinematic\\CinematicFlow.tsx -> @/components/cinematic/LetterEnvelope": {
+    "id": "components\\cinematic\\CinematicFlow.tsx -> @/components/cinematic/LetterEnvelope",
+    "files": [
+      "static/chunks/_app-pages-browser_components_cinematic_LetterEnvelope_tsx.js"
+    ]
+  },
   "components\\cinematic\\CinematicFlow.tsx -> @/components/cinematic/PotteryViewer": {
     "id": "components\\cinematic\\CinematicFlow.tsx -> @/components/cinematic/PotteryViewer",
     "files": [
@@ -9,6 +39,18 @@
     "id": "components\\cinematic\\CinematicFlow.tsx -> @/components/cinematic/RainTransition",
     "files": [
       "static/chunks/_app-pages-browser_components_cinematic_RainTransition_tsx.js"
+    ]
+  },
+  "components\\cinematic\\CinematicFlow.tsx -> @/components/cinematic/StoryArticle": {
+    "id": "components\\cinematic\\CinematicFlow.tsx -> @/components/cinematic/StoryArticle",
+    "files": [
+      "static/chunks/_app-pages-browser_components_cinematic_StoryArticle_tsx.js"
+    ]
+  },
+  "components\\cinematic\\CinematicFlow.tsx -> @/components/cinematic/StoryVideo": {
+    "id": "components\\cinematic\\CinematicFlow.tsx -> @/components/cinematic/StoryVideo",
+    "files": [
+      "static/chunks/_app-pages-browser_components_cinematic_StoryVideo_tsx.js"
     ]
   },
   "node_modules\\.pnpm\\@react-three+drei@9.122.0_@_1aa1be2cc8ebab45739c3b708b9e566e\\node_modules\\@react-three\\drei\\core\\VideoTexture.js -> hls.js": {

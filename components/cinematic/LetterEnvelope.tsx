@@ -28,13 +28,14 @@ export default function LetterEnvelope() {
     return (
         <motion.div
             key="letter"
-            initial={{ opacity: 0, filter: 'blur(8px)' }}
-            animate={{ opacity: 1, filter: 'blur(0px)' }}
-            exit={{ opacity: 0, filter: 'blur(6px)' }}
-            transition={{ duration: 0.9, ease: POTTERY_EASE }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0, transition: { duration: 0.3, ease: 'easeOut' } }}
+            transition={{ duration: 0.6, ease: 'easeInOut' }}
             className="screen-container"
+            style={{ willChange: 'opacity, transform' }}
         >
-            <MaterialReveal delay={0.3} className="text-center mb-6">
+            <MaterialReveal delay={0.2} className="text-center mb-6">
                 <p className="text-xs text-faifo-terracotta tracking-[0.3em] uppercase mb-2">
                     Lá thư
                 </p>
@@ -44,7 +45,7 @@ export default function LetterEnvelope() {
             </MaterialReveal>
 
             {/* Envelope container */}
-            <MaterialReveal delay={0.6} className="w-full max-w-sm">
+            <MaterialReveal delay={0.4} className="w-full max-w-sm">
                 <div className="envelope-perspective flex justify-center">
                     <div className="relative" style={{ width: 300, minHeight: submitted ? 200 : isOpen ? 480 : 220 }}>
 
@@ -186,17 +187,19 @@ export default function LetterEnvelope() {
             </MaterialReveal>
 
             {/* Submit button */}
-            {letterRevealed && !submitted && (
-                <MaterialReveal delay={0.5} className="mt-6">
-                    <motion.button
-                        whileTap={{ scale: 0.97 }}
-                        onClick={handleSubmit}
-                        className="px-8 py-3 rounded-xl bg-faifo-terracotta/20 border border-faifo-terracotta/40 text-stone-800 text-sm transition-colors duration-500 hover:bg-faifo-terracotta/30"
-                    >
-                        Gửi lời chúc ✨
-                    </motion.button>
-                </MaterialReveal>
-            )}
-        </motion.div>
+            {
+                letterRevealed && !submitted && (
+                    <MaterialReveal delay={0.4} className="mt-6">
+                        <motion.button
+                            whileTap={{ scale: 0.97 }}
+                            onClick={handleSubmit}
+                            className="px-8 py-3 rounded-xl bg-faifo-terracotta/20 border border-faifo-terracotta/40 text-stone-800 text-sm transition-colors duration-500 hover:bg-faifo-terracotta/30"
+                        >
+                            Gửi lời chúc ✨
+                        </motion.button>
+                    </MaterialReveal>
+                )
+            }
+        </motion.div >
     )
 }

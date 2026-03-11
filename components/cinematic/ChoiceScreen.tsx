@@ -12,13 +12,14 @@ export default function ChoiceScreen({ onChoice }: ChoiceScreenProps) {
     return (
         <motion.div
             key="choice"
-            initial={{ opacity: 0, filter: 'blur(8px)' }}
-            animate={{ opacity: 1, filter: 'blur(0px)' }}
-            exit={{ opacity: 0, filter: 'blur(6px)' }}
-            transition={{ duration: 0.9, ease: POTTERY_EASE }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0, transition: { duration: 0.3, ease: 'easeOut' } }}
+            transition={{ duration: 0.6, ease: 'easeInOut' }}
             className="screen-container"
+            style={{ willChange: 'opacity, transform' }}
         >
-            <MaterialReveal delay={0.3} className="text-center mb-10">
+            <MaterialReveal delay={0.2} className="text-center mb-10">
                 <h2 className="font-serif text-xl text-stone-800 mb-3">
                     Bạn muốn làm gì tiếp theo?
                 </h2>
@@ -29,7 +30,7 @@ export default function ChoiceScreen({ onChoice }: ChoiceScreenProps) {
 
             <div className="w-full space-y-5 max-w-xs">
                 {/* Option A: Cho Mình — Journal */}
-                <MaterialReveal delay={0.6}>
+                <MaterialReveal delay={0.4}>
                     <motion.button
                         whileTap={{ scale: 0.96, rotateX: 2 }}
                         whileHover={{ scale: 1.02 }}
@@ -51,7 +52,7 @@ export default function ChoiceScreen({ onChoice }: ChoiceScreenProps) {
                 </MaterialReveal>
 
                 {/* Option B: Cho Bạn — Letter */}
-                <MaterialReveal delay={0.9}>
+                <MaterialReveal delay={0.6}>
                     <motion.button
                         whileTap={{ scale: 0.96, rotateX: 2 }}
                         whileHover={{ scale: 1.02 }}
@@ -74,11 +75,11 @@ export default function ChoiceScreen({ onChoice }: ChoiceScreenProps) {
             </div>
 
             {/* Footer */}
-            <MaterialReveal delay={1.4} className="mt-12">
+            <MaterialReveal delay={0.8} className="mt-12">
                 <p className="text-[10px] text-stone-700 text-center">
                     Storytellers of Faifo · Handcrafted in Hội An
                 </p>
             </MaterialReveal>
-        </motion.div>
+        </motion.div >
     )
 }

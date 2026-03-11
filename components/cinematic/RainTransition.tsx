@@ -69,6 +69,8 @@ export default function RainTransition({ onComplete }: RainTransitionProps) {
         <div className="fixed inset-0 z-[100] pointer-events-none" style={{ backgroundColor: 'transparent' }}>
             <Canvas
                 gl={{ alpha: true, antialias: false }}
+                dpr={[1, 1]}
+                performance={{ min: 0.5 }}
                 orthographic
                 camera={{ zoom: 1, position: [0, 0, 1], left: -1, right: 1, top: 1, bottom: -1, near: 0.1, far: 10 }}
             >

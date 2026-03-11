@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, Suspense } from 'react'
+import React, { useEffect, Suspense } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { OrbitControls, useGLTF } from '@react-three/drei'
 import { motion } from 'framer-motion'
@@ -14,7 +14,7 @@ interface PotteryViewerProps {
     isTransitioning?: boolean;
 }
 
-function PotteryModel() {
+const PotteryModel = React.memo(function PotteryModel() {
     const { scene } = useGLTF('/model/faifo-pottery.glb')
 
     useEffect(() => {
@@ -50,15 +50,15 @@ function PotteryModel() {
         }
     }, [scene])
 
-    // @ts-ignore
     return <primitive object={scene} />
-}
+})
 
 export default function PotteryViewer({ onExplore, isTransitioning }: PotteryViewerProps) {
     return (
         <div className="relative w-full h-screen" style={{ backgroundColor: '#F5F0E6' }}>
             <Canvas
                 dpr={[1, 1.5]}
+                performance={{ min: 0.5 }}
                 gl={{
                     antialias: true,
                     alpha: false,
@@ -96,7 +96,7 @@ export default function PotteryViewer({ onExplore, isTransitioning }: PotteryVie
                 <div className="text-center mt-4">
                     <MaterialReveal delay={0.5}>
                         <h2 className="font-serif text-2xl text-stone-800 drop-shadow-sm">
-                            Bình Gốm Faifo
+                            Bình Gốm
                         </h2>
                     </MaterialReveal>
                 </div>

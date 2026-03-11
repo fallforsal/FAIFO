@@ -15,7 +15,7 @@ export default function StoryArticle({ onNext }: StoryArticleProps) {
             key="story"
             exit={{ opacity: 0 }} // Chỉ mờ đi khi chuyển qua màn Video
             className="screen-container bg-[#F5F0E6] min-h-screen w-full relative z-10" // Ép màu nền #F5F0E6
-            style={{ justifyContent: 'flex-start', paddingTop: '3rem' }}
+            style={{ justifyContent: 'flex-start', paddingTop: '3rem', willChange: 'opacity, transform' }}
         >
 
             <motion.div

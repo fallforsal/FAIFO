@@ -4,15 +4,17 @@ import { useState, useCallback } from 'react'
 import { AnimatePresence } from 'framer-motion'
 import dynamic from 'next/dynamic'
 
-// DOM-only components — regular imports
-import IntroScreen from '@/components/cinematic/IntroScreen'
-import BrandScreen from '@/components/cinematic/BrandScreen'
-import StoryArticle from '@/components/cinematic/StoryArticle'
-import StoryVideo from '@/components/cinematic/StoryVideo'
-import ChoiceScreen from '@/components/cinematic/ChoiceScreen'
-import JournalBook from '@/components/cinematic/JournalBook'
-import LetterEnvelope from '@/components/cinematic/LetterEnvelope'
+// ProgressBar — always visible, static import
 import ProgressBar from '@/components/cinematic/ProgressBar'
+
+// DOM screen components — lazy loaded for code splitting
+const IntroScreen = dynamic(() => import('@/components/cinematic/IntroScreen'))
+const BrandScreen = dynamic(() => import('@/components/cinematic/BrandScreen'))
+const StoryArticle = dynamic(() => import('@/components/cinematic/StoryArticle'))
+const StoryVideo = dynamic(() => import('@/components/cinematic/StoryVideo'))
+const ChoiceScreen = dynamic(() => import('@/components/cinematic/ChoiceScreen'))
+const JournalBook = dynamic(() => import('@/components/cinematic/JournalBook'))
+const LetterEnvelope = dynamic(() => import('@/components/cinematic/LetterEnvelope'))
 
 // WebGL components — lazy loaded, SSR disabled
 const PotteryViewer = dynamic(
