@@ -1,4 +1,10 @@
 {
+  "app\\scan\\[id]\\page.tsx -> @/components/cinematic/CinematicFlow": {
+    "id": "app\\scan\\[id]\\page.tsx -> @/components/cinematic/CinematicFlow",
+    "files": [
+      "static/chunks/_app-pages-browser_components_cinematic_CinematicFlow_tsx.js"
+    ]
+  },
   "components\\cinematic\\CinematicFlow.tsx -> @/components/cinematic/BrandScreen": {
     "id": "components\\cinematic\\CinematicFlow.tsx -> @/components/cinematic/BrandScreen",
     "files": [

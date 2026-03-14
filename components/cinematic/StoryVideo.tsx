@@ -6,6 +6,7 @@ import { POTTERY_EASE } from '@/lib/animation-config'
 
 interface StoryVideoProps {
     onNext: () => void
+    videoUrl?: string
 }
 
 const videoScenes = [
@@ -15,7 +16,7 @@ const videoScenes = [
     { emoji: '🏘️', label: 'Phố cổ Hội An' },
 ]
 
-export default function StoryVideo({ onNext }: StoryVideoProps) {
+export default function StoryVideo({ onNext, videoUrl }: StoryVideoProps) {
     return (
         <motion.div
             key="video"
@@ -33,52 +34,64 @@ export default function StoryVideo({ onNext }: StoryVideoProps) {
                 </h2>
             </MaterialReveal>
 
-            {/* Video placeholder */}
+            {/* Video — real player or placeholder */}
             <MaterialReveal delay={0.4} className="w-full max-w-sm">
-                <div className="w-full aspect-[9/16] max-h-[50vh] rounded-2xl bg-gradient-to-b from-stone-200/60 to-stone-300/50 border border-stone-300/50 flex flex-col items-center justify-center overflow-hidden relative">
-                    {/* Animated scene indicators */}
-                    <div className="grid grid-cols-2 gap-4 mb-6">
-                        {videoScenes.map((scene, i) => (
-                            <motion.div
-                                key={i}
-                                className="flex flex-col items-center gap-1"
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: [0.3, 0.7, 0.3] }}
-                                transition={{
-                                    duration: 3,
-                                    repeat: Infinity,
-                                    ease: 'easeInOut',
-                                    delay: i * 0.5,
-                                }}
-                            >
-                                <span className="text-2xl">{scene.emoji}</span>
-                                <span className="text-[10px] text-stone-600 text-center">
-                                    {scene.label}
-                                </span>
-                            </motion.div>
-                        ))}
+                {videoUrl ? (
+                    <div className="w-full aspect-[9/16] max-h-[50vh] rounded-2xl overflow-hidden border border-stone-300/50">
+                        <video
+                            src={videoUrl}
+                            controls
+                            playsInline
+                            preload="metadata"
+                            className="w-full h-full object-cover"
+                        />
                     </div>
+                ) : (
+                    <div className="w-full aspect-[9/16] max-h-[50vh] rounded-2xl bg-gradient-to-b from-stone-200/60 to-stone-300/50 border border-stone-300/50 flex flex-col items-center justify-center overflow-hidden relative">
+                        {/* Animated scene indicators */}
+                        <div className="grid grid-cols-2 gap-4 mb-6">
+                            {videoScenes.map((scene, i) => (
+                                <motion.div
+                                    key={i}
+                                    className="flex flex-col items-center gap-1"
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: [0.3, 0.7, 0.3] }}
+                                    transition={{
+                                        duration: 3,
+                                        repeat: Infinity,
+                                        ease: 'easeInOut',
+                                        delay: i * 0.5,
+                                    }}
+                                >
+                                    <span className="text-2xl">{scene.emoji}</span>
+                                    <span className="text-[10px] text-stone-600 text-center">
+                                        {scene.label}
+                                    </span>
+                                </motion.div>
+                            ))}
+                        </div>
 
-                    {/* Play button */}
-                    <motion.div
-                        className="w-16 h-16 rounded-full bg-faifo-terracotta/20 border border-faifo-terracotta/30 flex items-center justify-center"
-                        animate={{
-                            scale: [1, 1.1, 1],
-                            borderColor: [
-                                'rgba(154,52,18,0.3)',
-                                'rgba(154,52,18,0.6)',
-                                'rgba(154,52,18,0.3)',
-                            ],
-                        }}
-                        transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-                    >
-                        <span className="text-faifo-terracotta text-xl ml-1">▶</span>
-                    </motion.div>
+                        {/* Play button */}
+                        <motion.div
+                            className="w-16 h-16 rounded-full bg-faifo-terracotta/20 border border-faifo-terracotta/30 flex items-center justify-center"
+                            animate={{
+                                scale: [1, 1.1, 1],
+                                borderColor: [
+                                    'rgba(154,52,18,0.3)',
+                                    'rgba(154,52,18,0.6)',
+                                    'rgba(154,52,18,0.3)',
+                                ],
+                            }}
+                            transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+                        >
+                            <span className="text-faifo-terracotta text-xl ml-1">▶</span>
+                        </motion.div>
 
-                    <p className="text-xs text-stone-600 mt-4">
-                        Video sẽ được cập nhật
-                    </p>
-                </div>
+                        <p className="text-xs text-stone-600 mt-4">
+                            Video sẽ được cập nhật
+                        </p>
+                    </div>
+                )}
             </MaterialReveal>
 
             {/* End quote */}

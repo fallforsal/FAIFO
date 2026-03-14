@@ -4,8 +4,14 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import MaterialReveal from '@/components/animations/MaterialReveal'
 import { POTTERY_EASE } from '@/lib/animation-config'
+import type { Interaction } from '@/lib/types'
 
-export default function LetterEnvelope() {
+interface LetterEnvelopeProps {
+    chipId?: string
+    interactions?: Interaction[]
+}
+
+export default function LetterEnvelope({ chipId, interactions }: LetterEnvelopeProps) {
     const [isOpen, setIsOpen] = useState(false)
     const [letterRevealed, setLetterRevealed] = useState(false)
     const [submitted, setSubmitted] = useState(false)

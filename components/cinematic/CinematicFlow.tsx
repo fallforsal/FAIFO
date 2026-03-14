@@ -3,6 +3,7 @@
 import { useState, useCallback } from 'react'
 import { AnimatePresence } from 'framer-motion'
 import dynamic from 'next/dynamic'
+import type { ScanPageData } from '@/lib/types'
 
 // ProgressBar — always visible, static import
 import ProgressBar from '@/components/cinematic/ProgressBar'
@@ -35,6 +36,11 @@ const RainTransition = dynamic(
  * Canvas only exists for pottery + rain.
  * After rain completes, showCanvas = false → Canvas unmounts → GPU freed.
  * State only moves forward (no back-navigation to WebGL states).
+ *
+ * Conditional flow after video:
+ *   AVAILABLE    → choice (user picks journal or letter)
+ *   WISH_LOCKED  → letter (skip choice)
+ *   DIARY_LOCKED → journal (skip choice)
  */
 
 type FlowStep =
@@ -63,7 +69,12 @@ const STEP_PROGRESS: Record<FlowStep, number> = {
 
 const TOTAL_STEPS = 7
 
-export default function CinematicFlow() {
+interface CinematicFlowProps {
+    initialData: ScanPageData
+}
+
+export default function CinematicFlow({ initialData }: CinematicFlowProps) {
+    const { chip, product, interactions } = initialData
     const [step, setStep] = useState<FlowStep>('intro')
 
     // Derived: Canvas only mounts for pottery + rain
@@ -75,7 +86,23 @@ export default function CinematicFlow() {
     const goToRain = useCallback(() => setStep('rain'), [])
     const goToStory = useCallback(() => setStep('story'), [])
     const goToVideo = useCallback(() => setStep('video'), [])
-    const goToChoice = useCallback(() => setStep('choice'), [])
+
+    // After video: conditional routing based on chip status
+    const goToPostVideo = useCallback(() => {
+        switch (chip.status) {
+            case 'WISH_LOCKED':
+                setStep('letter')
+                break
+            case 'DIARY_LOCKED':
+                setStep('journal')
+                break
+            case 'AVAILABLE':
+            default:
+                setStep('choice')
+                break
+        }
+    }, [chip.status])
+
     const goToFinalScreen = useCallback((choice: 'journal' | 'letter') => {
         setStep(choice)
     }, [])
@@ -92,8 +119,11 @@ export default function CinematicFlow() {
                     {/* 1. LỚP NỀN: BÌNH GỐM (Luôn hiện ở cả màn pottery và màn rain) */}
                     <div className="fixed inset-0 z-10">
                         <PotteryViewer
-                            isTransitioning={step === 'rain'} // Truyền trạng thái để ẩn UI
+                            isTransitioning={step === 'rain'}
                             onExplore={goToRain}
+                            modelUrl={product.model_3d_url ?? undefined}
+                            productName={product.name}
+                            description={product.description ?? undefined}
                         />
                     </div>
 
@@ -117,19 +147,35 @@ export default function CinematicFlow() {
                         <BrandScreen key="brand" onNext={goToPottery} />
                     )}
                     {step === 'story' && (
-                        <StoryArticle key="story" onNext={goToVideo} />
+                        <StoryArticle
+                            key="story"
+                            onNext={goToVideo}
+                            storyText={product.story_text ?? undefined}
+                        />
                     )}
                     {step === 'video' && (
-                        <StoryVideo key="video" onNext={goToChoice} />
+                        <StoryVideo
+                            key="video"
+                            onNext={goToPostVideo}
+                            videoUrl={product.video_url ?? undefined}
+                        />
                     )}
                     {step === 'choice' && (
                         <ChoiceScreen key="choice" onChoice={goToFinalScreen} />
                     )}
                     {step === 'journal' && (
-                        <JournalBook key="journal" />
+                        <JournalBook
+                            key="journal"
+                            chipId={chip.id}
+                            interactions={interactions}
+                        />
                     )}
                     {step === 'letter' && (
-                        <LetterEnvelope key="letter" />
+                        <LetterEnvelope
+                            key="letter"
+                            chipId={chip.id}
+                            interactions={interactions}
+                        />
                     )}
                 </AnimatePresence>
             )}

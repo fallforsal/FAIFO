@@ -7,15 +7,19 @@ import { motion } from 'framer-motion'
 import * as THREE from 'three'
 import MaterialReveal from '@/components/animations/MaterialReveal'
 
-useGLTF.preload('/model/faifo-pottery.glb')
+const DEFAULT_MODEL_URL = '/model/faifo-pottery.glb'
+useGLTF.preload(DEFAULT_MODEL_URL)
 
 interface PotteryViewerProps {
-    onExplore: () => void;
-    isTransitioning?: boolean;
+    onExplore: () => void
+    isTransitioning?: boolean
+    modelUrl?: string
+    productName?: string
+    description?: string
 }
 
-const PotteryModel = React.memo(function PotteryModel() {
-    const { scene } = useGLTF('/model/faifo-pottery.glb')
+const PotteryModel = React.memo(function PotteryModel({ url }: { url: string }) {
+    const { scene } = useGLTF(url)
 
     useEffect(() => {
         const box = new THREE.Box3().setFromObject(scene)
@@ -53,7 +57,15 @@ const PotteryModel = React.memo(function PotteryModel() {
     return <primitive object={scene} />
 })
 
-export default function PotteryViewer({ onExplore, isTransitioning }: PotteryViewerProps) {
+export default function PotteryViewer({
+    onExplore,
+    isTransitioning,
+    modelUrl,
+    productName,
+    description,
+}: PotteryViewerProps) {
+    const resolvedModelUrl = modelUrl || DEFAULT_MODEL_URL
+
     return (
         <div className="relative w-full h-screen" style={{ backgroundColor: '#F5F0E6' }}>
             <Canvas
@@ -70,7 +82,7 @@ export default function PotteryViewer({ onExplore, isTransitioning }: PotteryVie
             >
                 <color attach="background" args={['#F5F0E6']} />
                 <Suspense fallback={null}>
-                    <PotteryModel />
+                    <PotteryModel url={resolvedModelUrl} />
                 </Suspense>
 
                 {/* @ts-ignore */}
@@ -96,7 +108,7 @@ export default function PotteryViewer({ onExplore, isTransitioning }: PotteryVie
                 <div className="text-center mt-4">
                     <MaterialReveal delay={0.5}>
                         <h2 className="font-serif text-2xl text-stone-800 drop-shadow-sm">
-                            Bình Gốm
+                            {productName || 'Bình Gốm'}
                         </h2>
                     </MaterialReveal>
                 </div>
@@ -105,9 +117,15 @@ export default function PotteryViewer({ onExplore, isTransitioning }: PotteryVie
                     <MaterialReveal delay={1.0}>
                         <div className="bg-white/70 backdrop-blur-md rounded-2xl p-5 border border-stone-200/50 mb-4">
                             <div className="space-y-2 text-sm text-stone-600">
-                                <p>🏺 <span className="text-stone-800">Chất liệu:</span> Đất sét truyền thống, nung thủ công</p>
-                                <p>🤲 Hoàn toàn làm tay — không có hai chiếc giống nhau</p>
-                                <p>🌿 <span className="text-stone-800">Kích thước / màu men:</span> Tùy chiếc</p>
+                                {description ? (
+                                    <p>{description}</p>
+                                ) : (
+                                    <>
+                                        <p>🏺 <span className="text-stone-800">Chất liệu:</span> Đất sét truyền thống, nung thủ công</p>
+                                        <p>🤲 Hoàn toàn làm tay — không có hai chiếc giống nhau</p>
+                                        <p>🌿 <span className="text-stone-800">Kích thước / màu men:</span> Tùy chiếc</p>
+                                    </>
+                                )}
                             </div>
                         </div>
                     </MaterialReveal>

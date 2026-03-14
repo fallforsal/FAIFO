@@ -4,8 +4,14 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import MaterialReveal from '@/components/animations/MaterialReveal'
 import { POTTERY_EASE } from '@/lib/animation-config'
+import type { Interaction } from '@/lib/types'
 
-export default function JournalBook() {
+interface JournalBookProps {
+    chipId?: string
+    interactions?: Interaction[]
+}
+
+export default function JournalBook({ chipId, interactions }: JournalBookProps) {
     const [isOpen, setIsOpen] = useState(false)
     const [currentPage, setCurrentPage] = useState(0)
     const [entry, setEntry] = useState('')
