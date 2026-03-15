@@ -1,223 +1,74 @@
-# 🏺 Storytellers of Faifo
+# FAIFO Project
 
-An NFC-powered digital storytelling and e-commerce platform for traditional Vietnamese pottery, built with a stable and production-ready tech stack for a seamless mobile-first experience.
+This project appears to be a modern web application, likely built with Next.js or React, featuring a well-structured component-based architecture, styling with Tailwind CSS, and potentially using Supabase for its backend services. The presence of shaders suggests a possibility of advanced graphical elements or animations.
 
-## 🚀 Tech Stack
+## Project Structure
 
-### Core Framework
-- **[Next.js 14](https://nextjs.org/)** - React framework with App Router (Stable Version)
-- **[React 18](https://react.dev/)** - UI library with React Server Components
-- **[TypeScript](https://www.typescriptlang.org/)** - Type-safe JavaScript
+-   `@db_schema.md`: Database schema definition for the project.
+-   `app/`: Likely contains the main application logic, pages, or routes.
+-   `components/`: Reusable UI components.
+-   `global.d.ts`: Global TypeScript declaration file.
+-   `index.html`: Main HTML entry point (if not a pure Next.js app).
+-   `lib/`: Utility functions, helper modules, or client-side libraries.
+-   `next-env.d.ts`: TypeScript environment declarations for Next.js.
+-   `next.config.js`: Configuration file for Next.js.
+-   `package.json`: Project metadata and dependencies.
+-   `pnpm-lock.yaml`: Lock file for pnpm package manager.
+-   `postcss.config.js`: Configuration for PostCSS.
+-   `public/`: Static assets like images, fonts, or other public files.
+-   `shaders/`: Custom shader files, suggesting advanced rendering or visual effects.
+-   `supabase/`: Supabase related configurations, migrations, or client setup.
+-   `tailwind.config.js`: Configuration file for Tailwind CSS.
+-   `tsconfig.json`: TypeScript configuration file.
 
-### Styling & UI
-- **[Tailwind CSS v3.4](https://tailwindcss.com/)** - Utility-first CSS framework
-- **[shadcn/ui](https://ui.shadcn.com/)** - High-quality component library (New York style)
-- **[Framer Motion](https://www.framer.com/motion/)** - Production-ready animation library for React
-- **[Radix UI](https://www.radix-ui.com/)** - Unstyled, accessible UI primitives
-- **[Lucide React](https://lucide.dev/)** - Beautiful SVG icons
+## Technologies Used
 
-### Data Management
-- **[Supabase](https://supabase.com/)** - Open source Firebase alternative (PostgreSQL + Auth)
-- **[TanStack Query](https://tanstack.com/query)** - Powerful data synchronization for React
-- **[React Hook Form](https://react-hook-form.com/)** - Performant forms with easy validation
-- **[Zod](https://zod.dev/)** - TypeScript-first schema validation
+-   **Framework**: Likely Next.js or React (inferred from `next-env.d.ts`, `next.config.js`, `app/`, `components/`).
+-   **Styling**: Tailwind CSS (via `tailwind.config.js`, `postcss.config.js`).
+-   **Package Manager**: pnpm (via `pnpm-lock.yaml`).
+-   **Database/Backend**: Supabase (via `supabase/` directory and `@db_schema.md`).
+-   **TypeScript**: For type-safe development (via `tsconfig.json`, `global.d.ts`, `next-env.d.ts`).
+-   **Graphics/Visuals**: Custom Shaders (via `shaders/` directory).
 
-### Development Tools
-- **[pnpm](https://pnpm.io/)** - Fast, disk space efficient package manager
-- **[ESLint](https://eslint.org/)** - Static code analysis
+## Getting Started
 
-## 📁 Project Architecture
+To set up and run the project locally, follow these general steps:
 
-This project follows a **feature-based module architecture** to cleanly separate the cultural storytelling experience from the e-commerce logic:
+### Prerequisites
 
-```text
-faifo/
-├── app/                     # Next.js App Router
-│   ├── (experience)/        # NFC interaction routes
-│   │   ├── scan/[id]/       # NFC entry point
-│   │   └── story/           # Storytelling flow
-│   ├── shop/                # E-commerce routes
-│   └── layout.tsx           # Root layout with providers
-├── components/              # Reusable UI components
-│   ├── ui/                  # shadcn/ui components
-│   ├── animations/          # Shared Framer Motion components
-│   └── providers/           # React context providers
-├── modules/                 # Feature-based modules
-│   ├── nfc-engine/          # NFC scanning & routing logic
-│   ├── storyteller/         # Digital letters & diary entries
-│   │   ├── api/             # Supabase queries & TanStack hooks
-│   │   ├── components/      # Story-specific components
-│   │   ├── types/           # Zod schemas & TypeScript types
-│   │   └── index.ts         # Module exports
-│   └── product/             # Pottery catalog logic
-├── lib/                     # Utility functions
-│   ├── supabase.ts          # Supabase client configuration
-│   ├── utils.ts             # Common utilities
-│   └── query-client.ts      # TanStack Query configuration
-├── tailwind.config.ts       # Tailwind CSS configuration with Custom Ceramic Colors
-└── ...config files
-```
-## Module Structure
+-   Node.js (LTS version recommended)
+-   pnpm package manager (`npm install -g pnpm`)
 
-Each feature module contains:
+### Installation
 
-api/ - Query keys, API functions, and TanStack Query hooks interacting with Supabase
+1.  Clone the repository (if you haven't already):
+    ```bash
+    git clone https://github.com/fallforsal/FAIFO.git
+    cd FAIFO
+    ```
+2.  Install dependencies using pnpm:
+    ```bash
+    pnpm install
+    ```
 
-components/ - Feature-specific React components
+### Configuration
 
-types/ - TypeScript interfaces and Zod validation schemas
+-   **Supabase**: Ensure your Supabase environment variables are correctly set up (e.g., in a `.env.local` file). Refer to the `supabase/` directory and `@db_schema.md` for specific details.
 
-index.ts - Centralized exports for clean imports
+### Running the Development Server
 
-## 🛠️ Getting Started
-Prerequisites
+To start the development server:
 
-Node.js 18+
-
-pnpm (recommended) or npm
-
-Supabase Project Setup
-
-## Installation
-
-```Clone the repository
-
-Bash
-git clone <repository-url>
-cd faifo
-```
-### Install dependencies
-
-```Bash
-pnpm install
-```
-### Environment Setup
-```Create a .env.local file in the root directory:
-#Đoạn mã
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-```
-### Start development server
-
-```Bash
+```bash
 pnpm dev
 ```
-### Open your browser
-Navigate to http://localhost:3000
-(Note: To test NFC flow on a physical mobile device, use Ngrok: ngrok http 3000)
 
-### Available Scripts
+Open [http://localhost:3000](http://localhost:3000) (or the port specified by your Next.js/React setup) in your browser to see the application.
 
-```Bash
-pnpm dev      # Start development server with Turbopack
-pnpm build    # Build for production
-pnpm start    # Start production server
-pnpm lint     # Run ESLint
-```
-## 📖 Example Usage
-Creating a New Feature Module (e.g., Storyteller)
+## Database Schema
 
-## 1.Create module structure:
+The `@db_schema.md` file contains the database schema definition, which is crucial for understanding the data models and relationships used in the application.
 
-```Plaintext
-modules/storyteller/
-├── api/index.ts
-├── components/
-├── types/index.ts
-└── index.ts
-```
-### 2.Define types with Zod:
+---
 
-```TypeScript
-// modules/storyteller/types/index.ts
-import { z } from "zod";
-
-export const storySchema = z.object({
-  id: z.string().uuid(),
-  nfc_id: z.string(),
-  sender_name: z.string().min(1, "Name is required"),
-  message: z.string().max(500, "Message is too long"),
-});
-
-export type Story = z.infer<typeof storySchema>;
-```
-### 3. Create API hooks (with Supabase):
-
-```TypeScript
-// modules/storyteller/api/index.ts
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/lib/supabase";
-
-export const useStory = (nfcId: string) => {
-  return useQuery({
-    queryKey: ["story", nfcId],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("stories")
-        .select("*")
-        .eq("nfc_id", nfcId)
-        .single();
-
-      if (error) throw error;
-      return data;
-    },
-  });
-};
-```
-### 4.Build components:
-
-```TypeScript
-// modules/storyteller/components/story-form.tsx
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { storySchema } from "../types";
-
-export function StoryForm() {
-  const form = useForm({
-    resolver: zodResolver(storySchema),
-  });
-  // ... component logic with Framer Motion animations
-}
-```
-## Working Example
-
-Visit /scan/[nfc_id] to see a complete implementation featuring:
-
-Seamless page transitions using Framer Motion
-
-Real-time data fetching from Supabase via TanStack Query
-
-Type-safe emotional message validation with Zod
-
-## 🎯 Key Benefits
-Physical-Digital Bridge: Flawlessly connects real-world pottery to cloud-based memories via NFC.
-
-Cinematic UX: Heavy focus on smooth animations and storytelling pacing.
-
-Type Safety: End-to-end TypeScript with Zod runtime validation.
-
-Performance: Turbopack for fast development, optimized production builds.
-
-Scalability: Feature-based architecture separating content delivery from e-commerce.
-
-## 📚 Documentation
-- **[CLAUDE.md](https://code.claude.com/docs)** - Detailed guidance for AI development
-
-- **[Next.js](https://nextjs.org/docs)** Docs
-
-- **[Supabase](https://supabase.com/docs)** Docs
-
-- **[Framer Motion](https://motion.dev)** Docs
-
-- **[TanStack Query](https://tanstack.com/query/latest)** Docs
-
-## 🤝 Contributing
-Follow the existing module structure.
-
-Ensure all UI components are mobile-first and gracefully animated.
-
-Use TypeScript and Zod for all new features.
-
-Add proper error handling and loading states (skeleton loaders preferred).
-
-## Built with ❤️ for the artisans of Faifo.
+_This README.md was automatically generated by a Gemini 2.5 Flash model on 2026-03-15 at 21:28 GMT+7._
