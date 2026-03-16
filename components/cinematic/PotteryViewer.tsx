@@ -16,7 +16,7 @@ interface PotteryViewerProps {
 }
 
 const PotteryModel = React.memo(function PotteryModel({ url }: { url: string }) {
-    // Sẽ lấy từ cache ra ngay lập tức vì đã được preload ở page.tsx
+    // Sẽ lấy ngay từ cache ra, không tốn thời gian tải nữa
     const { scene } = useGLTF(url)
 
     useEffect(() => {
@@ -62,7 +62,7 @@ export default function PotteryViewer({
     productName,
     description,
 }: PotteryViewerProps) {
-    // Fallback URL phòng trường hợp DB trống, nhưng nên ưu tiên truyền modelUrl từ props
+    // Nếu DB mất URL, dùng tạm file dự phòng
     const resolvedModelUrl = modelUrl || '/model/faifo-pottery.glb'
 
     return (
@@ -81,7 +81,7 @@ export default function PotteryViewer({
             >
                 <color attach="background" args={['#F5F0E6']} />
 
-                {/* Fallback là null vì ta đã preload ở màn hình trước, nó sẽ hiện ra rất nhanh */}
+                {/* Dữ liệu đã sẵn sàng, fallback=null sẽ giúp khung hình lên ngay lập tức */}
                 <Suspense fallback={null}>
                     <PotteryModel url={resolvedModelUrl} />
                 </Suspense>
