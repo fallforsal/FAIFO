@@ -4,17 +4,36 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import MaterialReveal from '@/components/animations/MaterialReveal'
 import { POTTERY_EASE } from '@/lib/animation-config'
+import { saveInteraction } from '@/app/actions/interaction'
 import type { Interaction } from '@/lib/types'
 
 interface JournalBookProps {
     chipId?: string
     interactions?: Interaction[]
+    onSaveComplete?: () => void
 }
 
-export default function JournalBook({ chipId, interactions }: JournalBookProps) {
+export default function JournalBook({ chipId, interactions, onSaveComplete }: JournalBookProps) {
     const [isOpen, setIsOpen] = useState(false)
     const [currentPage, setCurrentPage] = useState(0)
     const [entry, setEntry] = useState('')
+    const [isSaving, setIsSaving] = useState(false)
+
+    const handleSave = async () => {
+        if (!entry.trim() || !chipId) return
+
+        setIsSaving(true)
+        const result = await saveInteraction(chipId, 'DIARY_ENTRY', entry)
+        setIsSaving(false)
+
+        if (result.success) {
+            setCurrentPage(1)
+            // Give user a moment to see the confirmation, then notify parent
+            setTimeout(() => onSaveComplete?.(), 2000)
+        } else {
+            console.error('[JournalBook] save failed:', result.error)
+        }
+    }
 
     return (
         <motion.div
@@ -169,10 +188,11 @@ export default function JournalBook({ chipId, interactions }: JournalBookProps) 
                     <MaterialReveal delay={0.6} className="mt-6">
                         <motion.button
                             whileTap={{ scale: 0.97 }}
-                            onClick={() => setCurrentPage(1)}
-                            className="px-8 py-3 rounded-xl bg-faifo-terracotta/20 border border-faifo-terracotta/40 text-stone-800 text-sm transition-colors duration-500 hover:bg-faifo-terracotta/30"
+                            onClick={handleSave}
+                            disabled={isSaving}
+                            className="px-8 py-3 rounded-xl bg-faifo-terracotta/20 border border-faifo-terracotta/40 text-stone-800 text-sm transition-colors duration-500 hover:bg-faifo-terracotta/30 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                            Lưu ký ức ✨
+                            {isSaving ? 'Đang lưu...' : 'Lưu ký ức ✨'}
                         </motion.button>
                     </MaterialReveal>
                 )

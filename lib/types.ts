@@ -24,6 +24,7 @@ export interface NfcChip {
 export interface Interaction {
     id: string
     nfc_chip_id: string
+    type?: 'GREETING' | 'DIARY_ENTRY'
     content: string
     media_url: string | null
     created_at: string

@@ -16,6 +16,7 @@ const StoryVideo = dynamic(() => import('@/components/cinematic/StoryVideo'))
 const ChoiceScreen = dynamic(() => import('@/components/cinematic/ChoiceScreen'))
 const JournalBook = dynamic(() => import('@/components/cinematic/JournalBook'))
 const LetterEnvelope = dynamic(() => import('@/components/cinematic/LetterEnvelope'))
+const FinalScreen = dynamic(() => import('@/components/cinematic/FinalScreen'))
 
 // WebGL components — lazy loaded, SSR disabled
 const PotteryViewer = dynamic(
@@ -53,6 +54,7 @@ type FlowStep =
     | 'choice'
     | 'journal'
     | 'letter'
+    | 'final'
 
 // Map steps to progress bar position (1-based)
 const STEP_PROGRESS: Record<FlowStep, number> = {
@@ -65,9 +67,10 @@ const STEP_PROGRESS: Record<FlowStep, number> = {
     choice: 6,
     journal: 7,
     letter: 7,
+    final: 8,
 }
 
-const TOTAL_STEPS = 7
+const TOTAL_STEPS = 8
 
 interface CinematicFlowProps {
     initialData: ScanPageData
@@ -105,6 +108,11 @@ export default function CinematicFlow({ initialData }: CinematicFlowProps) {
 
     const goToFinalScreen = useCallback((choice: 'journal' | 'letter') => {
         setStep(choice)
+    }, [])
+
+    // After save completes in journal/letter, transition to the final thank-you screen
+    const handleSaveComplete = useCallback(() => {
+        setStep('final')
     }, [])
 
     return (
@@ -168,6 +176,7 @@ export default function CinematicFlow({ initialData }: CinematicFlowProps) {
                             key="journal"
                             chipId={chip.id}
                             interactions={interactions}
+                            onSaveComplete={handleSaveComplete}
                         />
                     )}
                     {step === 'letter' && (
@@ -175,7 +184,11 @@ export default function CinematicFlow({ initialData }: CinematicFlowProps) {
                             key="letter"
                             chipId={chip.id}
                             interactions={interactions}
+                            onSaveComplete={handleSaveComplete}
                         />
+                    )}
+                    {step === 'final' && (
+                        <FinalScreen key="final" />
                     )}
                 </AnimatePresence>
             )}

@@ -1,5 +1,14 @@
 {
-  "node": {},
+  "node": {
+    "34a6146ff77b42b96bac87300e2c072c76fcca56": {
+      "workers": {
+        "app/scan/[id]/page": "(action-browser)/./node_modules/.pnpm/next@14.2.3_react-dom@18.2.0_react@18.2.0__react@18.2.0/node_modules/next/dist/build/webpack/loaders/next-flight-action-entry-loader.js?actions=%5B%5B%22C%3A%5C%5CUsers%5C%5CAdmin%5C%5CDocuments%5C%5CGitHub%5C%5CFAIFO%5C%5Capp%5C%5Cactions%5C%5Cinteraction.ts%22%2C%5B%22saveInteraction%22%5D%5D%5D&__client_imported__=true!"
+      },
+      "layer": {
+        "app/scan/[id]/page": "action-browser"
+      }
+    }
+  },
   "edge": {},
-  "encryptionKey": "1myyiBdgaRmY6AyLCv7ktnAQmtfw5TaOB3xCTZaxafg="
+  "encryptionKey": "qZiuRHKVgpCzPgLGwfVJXuPV/Ibo6vbv2jv/MuxtPu8="
 }

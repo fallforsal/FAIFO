@@ -4,17 +4,20 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import MaterialReveal from '@/components/animations/MaterialReveal'
 import { POTTERY_EASE } from '@/lib/animation-config'
+import { saveInteraction } from '@/app/actions/interaction'
 import type { Interaction } from '@/lib/types'
 
 interface LetterEnvelopeProps {
     chipId?: string
     interactions?: Interaction[]
+    onSaveComplete?: () => void
 }
 
-export default function LetterEnvelope({ chipId, interactions }: LetterEnvelopeProps) {
+export default function LetterEnvelope({ chipId, interactions, onSaveComplete }: LetterEnvelopeProps) {
     const [isOpen, setIsOpen] = useState(false)
     const [letterRevealed, setLetterRevealed] = useState(false)
     const [submitted, setSubmitted] = useState(false)
+    const [isSaving, setIsSaving] = useState(false)
 
     const [recipientName, setRecipientName] = useState('')
     const [senderName, setSenderName] = useState('')
@@ -25,9 +28,20 @@ export default function LetterEnvelope({ chipId, interactions }: LetterEnvelopeP
         setTimeout(() => setLetterRevealed(true), 800)
     }
 
-    const handleSubmit = () => {
-        if (recipientName && senderName && message) {
+    const handleSubmit = async () => {
+        if (!recipientName || !senderName || !message || !chipId) return
+
+        setIsSaving(true)
+        const content = `Gửi ${recipientName},\n\n${message}\n\n— ${senderName}`
+        const result = await saveInteraction(chipId, 'GREETING', content)
+        setIsSaving(false)
+
+        if (result.success) {
             setSubmitted(true)
+            // Give user a moment to see the confirmation, then notify parent
+            setTimeout(() => onSaveComplete?.(), 2000)
+        } else {
+            console.error('[LetterEnvelope] save failed:', result.error)
         }
     }
 
@@ -199,9 +213,10 @@ export default function LetterEnvelope({ chipId, interactions }: LetterEnvelopeP
                         <motion.button
                             whileTap={{ scale: 0.97 }}
                             onClick={handleSubmit}
-                            className="px-8 py-3 rounded-xl bg-faifo-terracotta/20 border border-faifo-terracotta/40 text-stone-800 text-sm transition-colors duration-500 hover:bg-faifo-terracotta/30"
+                            disabled={isSaving}
+                            className="px-8 py-3 rounded-xl bg-faifo-terracotta/20 border border-faifo-terracotta/40 text-stone-800 text-sm transition-colors duration-500 hover:bg-faifo-terracotta/30 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                            Gửi lời chúc ✨
+                            {isSaving ? 'Đang lưu...' : 'Gửi lời chúc ✨'}
                         </motion.button>
                     </MaterialReveal>
                 )
