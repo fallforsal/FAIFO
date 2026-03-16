@@ -185,6 +185,7 @@ export default function CinematicFlow({ initialData }: CinematicFlowProps) {
                             chipId={chip.id}
                             interactions={interactions}
                             onSaveComplete={handleSaveComplete}
+                            isReadOnly={chip.status === 'WISH_LOCKED'}
                         />
                     )}
                     {step === 'final' && (

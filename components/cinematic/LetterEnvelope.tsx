@@ -10,18 +10,25 @@ import type { Interaction } from '@/lib/types'
 interface LetterEnvelopeProps {
     chipId?: string
     interactions?: Interaction[]
+    isReadOnly?: boolean // Cờ xác định trạng thái Đọc hay Viết
     onSaveComplete?: () => void
 }
 
-export default function LetterEnvelope({ chipId, interactions, onSaveComplete }: LetterEnvelopeProps) {
+export default function LetterEnvelope({ chipId, interactions = [], isReadOnly = false, onSaveComplete }: LetterEnvelopeProps) {
     const [isOpen, setIsOpen] = useState(false)
     const [letterRevealed, setLetterRevealed] = useState(false)
     const [submitted, setSubmitted] = useState(false)
     const [isSaving, setIsSaving] = useState(false)
 
+    // Form states (chỉ dùng khi viết mới)
     const [recipientName, setRecipientName] = useState('')
     const [senderName, setSenderName] = useState('')
     const [message, setMessage] = useState('')
+
+    // Lấy nội dung thư cũ nếu ở chế độ ReadOnly
+    const existingGreeting = interactions.find(i => i.type === 'GREETING')?.content || ''
+
+    const isContentEmpty = !recipientName.trim() && !senderName.trim() && !message.trim()
 
     const handleOpen = () => {
         setIsOpen(true)
@@ -29,7 +36,22 @@ export default function LetterEnvelope({ chipId, interactions, onSaveComplete }:
     }
 
     const handleSubmit = async () => {
-        if (!recipientName || !senderName || !message || !chipId) return
+        // 1. Chế độ đọc: Bấm là đóng thư, đi thẳng tới màn hình cảm ơn
+        if (isReadOnly) {
+            setSubmitted(true)
+            setTimeout(() => onSaveComplete?.(), 2000)
+            return
+        }
+
+        // 2. Chế độ viết nhưng bỏ trống: Bỏ qua không lưu DB
+        if (isContentEmpty) {
+            setSubmitted(true)
+            setTimeout(() => onSaveComplete?.(), 2000)
+            return
+        }
+
+        // 3. Chế độ viết và có nội dung: Lưu xuống DB
+        if (!chipId) return
 
         setIsSaving(true)
         const content = `Gửi ${recipientName},\n\n${message}\n\n— ${senderName}`
@@ -38,12 +60,17 @@ export default function LetterEnvelope({ chipId, interactions, onSaveComplete }:
 
         if (result.success) {
             setSubmitted(true)
-            // Give user a moment to see the confirmation, then notify parent
             setTimeout(() => onSaveComplete?.(), 2000)
         } else {
             console.error('[LetterEnvelope] save failed:', result.error)
         }
     }
+
+    // Logic đổi chữ trên nút bấm
+    let buttonText = 'Gửi lời chúc ✨'
+    if (isReadOnly) buttonText = 'Khép lại 💌'
+    else if (isSaving) buttonText = 'Đang gửi...'
+    else if (isContentEmpty) buttonText = 'Bỏ qua ➡️'
 
     return (
         <motion.div
@@ -60,7 +87,7 @@ export default function LetterEnvelope({ chipId, interactions, onSaveComplete }:
                     Lá thư
                 </p>
                 <h2 className="font-serif text-xl text-stone-800">
-                    Gửi lời chúc đến một người bạn
+                    {isReadOnly ? 'Một lời chúc được gửi gắm' : 'Gửi lời chúc đến một người bạn'}
                 </h2>
             </MaterialReveal>
 
@@ -133,43 +160,52 @@ export default function LetterEnvelope({ chipId, interactions, onSaveComplete }:
                                     className="absolute left-3 right-3"
                                     style={{ top: 20, zIndex: 5 }}
                                 >
-                                    <div className="letter-paper rounded-lg p-5">
-                                        <div className="letter-lines">
-                                            {/* Recipient */}
-                                            <div className="mb-4">
-                                                <label className="text-xs text-stone-400 block mb-1">Gửi đến</label>
-                                                <input
-                                                    type="text"
-                                                    value={recipientName}
-                                                    onChange={(e) => setRecipientName(e.target.value)}
-                                                    placeholder="Tên người nhận"
-                                                    className="w-full bg-transparent text-stone-700 font-handwriting text-lg border-b border-stone-300/30 pb-1 focus:outline-none focus:border-faifo-terracotta/50 placeholder:text-stone-300/50"
-                                                />
-                                            </div>
+                                    <div className="letter-paper rounded-lg p-5 min-h-[250px] flex flex-col">
+                                        <div className="letter-lines flex-1">
+                                            {isReadOnly ? (
+                                                // CHẾ ĐỘ ĐỌC: Hiển thị nguyên văn text
+                                                <div className="mb-4">
+                                                    <p className="w-full bg-transparent text-stone-700 font-handwriting text-lg leading-7 whitespace-pre-wrap">
+                                                        {existingGreeting}
+                                                    </p>
+                                                </div>
+                                            ) : (
+                                                // CHẾ ĐỘ VIẾT: Hiển thị Form nhập liệu
+                                                <>
+                                                    <div className="mb-4">
+                                                        <label className="text-xs text-stone-400 block mb-1">Gửi đến</label>
+                                                        <input
+                                                            type="text"
+                                                            value={recipientName}
+                                                            onChange={(e) => setRecipientName(e.target.value)}
+                                                            placeholder="Tên người nhận"
+                                                            className="w-full bg-transparent text-stone-700 font-handwriting text-lg border-b border-stone-300/30 pb-1 focus:outline-none focus:border-faifo-terracotta/50 placeholder:text-stone-300/50"
+                                                        />
+                                                    </div>
 
-                                            {/* Message */}
-                                            <div className="mb-4">
-                                                <label className="text-xs text-stone-400 block mb-1">Lời nhắn</label>
-                                                <textarea
-                                                    value={message}
-                                                    onChange={(e) => setMessage(e.target.value)}
-                                                    placeholder="Viết lời chúc tại đây..."
-                                                    rows={4}
-                                                    className="w-full bg-transparent text-stone-700 font-handwriting text-lg leading-7 resize-none focus:outline-none placeholder:text-stone-300/50"
-                                                />
-                                            </div>
+                                                    <div className="mb-4">
+                                                        <label className="text-xs text-stone-400 block mb-1">Lời nhắn</label>
+                                                        <textarea
+                                                            value={message}
+                                                            onChange={(e) => setMessage(e.target.value)}
+                                                            placeholder="Viết lời chúc tại đây..."
+                                                            rows={4}
+                                                            className="w-full bg-transparent text-stone-700 font-handwriting text-lg leading-7 resize-none focus:outline-none placeholder:text-stone-300/50"
+                                                        />
+                                                    </div>
 
-                                            {/* Sender */}
-                                            <div className="mb-2">
-                                                <label className="text-xs text-stone-400 block mb-1">Từ</label>
-                                                <input
-                                                    type="text"
-                                                    value={senderName}
-                                                    onChange={(e) => setSenderName(e.target.value)}
-                                                    placeholder="Tên bạn"
-                                                    className="w-full bg-transparent text-stone-700 font-handwriting text-lg border-b border-stone-300/30 pb-1 focus:outline-none focus:border-faifo-terracotta/50 placeholder:text-stone-300/50"
-                                                />
-                                            </div>
+                                                    <div className="mb-2">
+                                                        <label className="text-xs text-stone-400 block mb-1">Từ</label>
+                                                        <input
+                                                            type="text"
+                                                            value={senderName}
+                                                            onChange={(e) => setSenderName(e.target.value)}
+                                                            placeholder="Tên bạn"
+                                                            className="w-full bg-transparent text-stone-700 font-handwriting text-lg border-b border-stone-300/30 pb-1 focus:outline-none focus:border-faifo-terracotta/50 placeholder:text-stone-300/50"
+                                                        />
+                                                    </div>
+                                                </>
+                                            )}
                                         </div>
                                     </div>
                                 </motion.div>
@@ -187,11 +223,13 @@ export default function LetterEnvelope({ chipId, interactions, onSaveComplete }:
                                     <div className="text-center py-6">
                                         <span className="text-4xl">✉️</span>
                                         <p className="font-handwriting text-xl text-stone-800 mt-4">
-                                            Lá thư đã được gửi đi
+                                            {isReadOnly ? 'Lá thư đã được đóng lại' : 'Lá thư đã được gửi đi'}
                                         </p>
                                         <p className="text-xs text-stone-600 mt-2 leading-relaxed">
-                                            Lời chúc của bạn giờ đã đồng hành<br />
-                                            cùng chiếc gốm từ Faifo.
+                                            {isReadOnly
+                                                ? <>Tâm tình này là một phần<br />không thể tách rời của chiếc gốm.</>
+                                                : <>Lời chúc của bạn giờ đã đồng hành<br />cùng chiếc gốm từ Faifo.</>
+                                            }
                                         </p>
                                         <div className="mt-6 flex items-center justify-center gap-2">
                                             <div className="w-8 h-8 rounded-full border border-stone-300 flex items-center justify-center">
@@ -214,9 +252,12 @@ export default function LetterEnvelope({ chipId, interactions, onSaveComplete }:
                             whileTap={{ scale: 0.97 }}
                             onClick={handleSubmit}
                             disabled={isSaving}
-                            className="px-8 py-3 rounded-xl bg-faifo-terracotta/20 border border-faifo-terracotta/40 text-stone-800 text-sm transition-colors duration-500 hover:bg-faifo-terracotta/30 disabled:opacity-50 disabled:cursor-not-allowed"
+                            className={`px-8 py-3 rounded-xl border text-sm transition-colors duration-500 disabled:opacity-50 disabled:cursor-not-allowed ${isReadOnly
+                                    ? 'bg-stone-200 border-stone-300 text-stone-700 hover:bg-stone-300'
+                                    : 'bg-faifo-terracotta/20 border-faifo-terracotta/40 text-stone-800 hover:bg-faifo-terracotta/30'
+                                }`}
                         >
-                            {isSaving ? 'Đang lưu...' : 'Gửi lời chúc ✨'}
+                            {buttonText}
                         </motion.button>
                     </MaterialReveal>
                 )

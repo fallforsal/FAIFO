@@ -13,27 +13,44 @@ interface JournalBookProps {
     onSaveComplete?: () => void
 }
 
-export default function JournalBook({ chipId, interactions, onSaveComplete }: JournalBookProps) {
+export default function JournalBook({ chipId, interactions = [], onSaveComplete }: JournalBookProps) {
     const [isOpen, setIsOpen] = useState(false)
-    const [currentPage, setCurrentPage] = useState(0)
+    // viewPage: từ 0 đến interactions.length. Trang cuối (bằng length) là trang để viết mới.
+    const [viewPage, setViewPage] = useState(0)
     const [entry, setEntry] = useState('')
     const [isSaving, setIsSaving] = useState(false)
+    const [isSuccess, setIsSuccess] = useState(false)
+
+    const totalPages = interactions.length + 1
+    const isNewPage = viewPage === interactions.length
+    const currentPastEntry = !isNewPage ? interactions[viewPage] : null
 
     const handleSave = async () => {
-        if (!entry.trim() || !chipId) return
+        if (!chipId) return
 
+        // Nếu người dùng KHÔNG viết gì: Gấp sổ, không gọi API để tránh rác DB, đi tiếp flow
+        if (!entry.trim()) {
+            setIsSuccess(true)
+            setTimeout(() => onSaveComplete?.(), 2000)
+            return
+        }
+
+        // Nếu CÓ viết nội dung: Tiến hành lưu DB
         setIsSaving(true)
         const result = await saveInteraction(chipId, 'DIARY_ENTRY', entry)
         setIsSaving(false)
 
         if (result.success) {
-            setCurrentPage(1)
-            // Give user a moment to see the confirmation, then notify parent
+            setIsSuccess(true)
             setTimeout(() => onSaveComplete?.(), 2000)
         } else {
             console.error('[JournalBook] save failed:', result.error)
+            // Có thể thêm toast notification báo lỗi ở đây sau
         }
     }
+
+    const next_page = () => setViewPage(p => Math.min(totalPages - 1, p + 1))
+    const prev_page = () => setViewPage(p => Math.max(0, p - 1))
 
     return (
         <motion.div
@@ -57,7 +74,7 @@ export default function JournalBook({ chipId, interactions, onSaveComplete }: Jo
             {/* Book container with CSS 3D */}
             <MaterialReveal delay={0.4} className="w-full max-w-sm">
                 <div className="book-perspective flex justify-center">
-                    <div className="relative" style={{ width: 300, height: 400 }}>
+                    <div className="relative" style={{ width: 300, height: 420 }}>
                         {/* Book back */}
                         <div
                             className="absolute inset-0 rounded-r-lg shadow-2xl"
@@ -74,67 +91,90 @@ export default function JournalBook({ chipId, interactions, onSaveComplete }: Jo
                                     initial={{ opacity: 0 }}
                                     animate={{ opacity: 1 }}
                                     transition={{ delay: 0.6, duration: 0.5 }}
-                                    className="absolute inset-0 rounded-r-lg overflow-hidden"
+                                    className="absolute inset-0 rounded-r-lg overflow-hidden flex flex-col"
                                     style={{
                                         background: 'linear-gradient(135deg, #f5f0e8 0%, #ede7dd 100%)',
                                         margin: '4px 4px 4px 8px',
                                     }}
                                 >
-                                    {/* Notebook lines */}
-                                    <div className="notebook-lines h-full p-6 pt-8">
+                                    <div className="notebook-lines flex-1 p-6 pt-8 flex flex-col relative">
                                         <AnimatePresence mode="wait">
-                                            {currentPage === 0 && (
+                                            {isSuccess ? (
                                                 <motion.div
-                                                    key="page-0"
-                                                    initial={{ opacity: 0, x: 20 }}
-                                                    animate={{ opacity: 1, x: 0 }}
-                                                    exit={{ opacity: 0, x: -20 }}
-                                                    transition={{ duration: 0.5, ease: POTTERY_EASE }}
-                                                >
-                                                    {/* Date */}
-                                                    <p className="text-xs text-stone-400 mb-6 font-handwriting text-lg">
-                                                        {new Date().toLocaleDateString('vi-VN', {
-                                                            day: '2-digit', month: 'long', year: 'numeric'
-                                                        })}
-                                                    </p>
-
-                                                    {/* Journal entry area */}
-                                                    <textarea
-                                                        value={entry}
-                                                        onChange={(e) => setEntry(e.target.value)}
-                                                        placeholder="Viết ký ức của bạn ở đây..."
-                                                        className="w-full h-56 bg-transparent text-stone-700 font-handwriting text-lg leading-[32px] resize-none focus:outline-none placeholder:text-stone-300/60"
-                                                        style={{ lineHeight: '32px' }}
-                                                    />
-                                                </motion.div>
-                                            )}
-
-                                            {currentPage === 1 && (
-                                                <motion.div
-                                                    key="page-1"
-                                                    initial={{ opacity: 0, x: 20 }}
-                                                    animate={{ opacity: 1, x: 0 }}
-                                                    exit={{ opacity: 0, x: -20 }}
-                                                    transition={{ duration: 0.5, ease: POTTERY_EASE }}
+                                                    key="success-screen"
+                                                    initial={{ opacity: 0, scale: 0.9 }}
+                                                    animate={{ opacity: 1, scale: 1 }}
                                                     className="flex flex-col items-center justify-center h-full"
                                                 >
                                                     <p className="text-4xl mb-4">📖</p>
                                                     <p className="font-handwriting text-xl text-stone-600 text-center">
-                                                        Ký ức đã được lưu giữ
+                                                        Sổ đã được cất giữ
                                                     </p>
                                                     <p className="text-xs text-stone-400 mt-4 text-center">
                                                         Câu chuyện của bạn giờ đã là<br />
                                                         một phần của chiếc gốm này.
                                                     </p>
+                                                </motion.div>
+                                            ) : (
+                                                <motion.div
+                                                    key={`page-${viewPage}`}
+                                                    initial={{ opacity: 0, x: 10 }}
+                                                    animate={{ opacity: 1, x: 0 }}
+                                                    exit={{ opacity: 0, x: -10 }}
+                                                    transition={{ duration: 0.3 }}
+                                                    className="flex flex-col h-full"
+                                                >
+                                                    {/* Date */}
+                                                    <p className="text-xs text-stone-400 mb-4 font-handwriting text-lg">
+                                                        {isNewPage
+                                                            ? new Date().toLocaleDateString('vi-VN', { day: '2-digit', month: 'long', year: 'numeric' })
+                                                            : new Date(currentPastEntry?.created_at || '').toLocaleDateString('vi-VN', { day: '2-digit', month: 'long', year: 'numeric' })
+                                                        }
+                                                    </p>
 
-                                                    <div className="mt-8 flex items-center gap-2">
-                                                        <div className="w-8 h-8 rounded-full border border-stone-300 flex items-center justify-center">
-                                                            <span className="font-serif text-[8px] text-stone-400">SoF</span>
+                                                    {/* Content Area */}
+                                                    {isNewPage ? (
+                                                        <textarea
+                                                            value={entry}
+                                                            onChange={(e) => setEntry(e.target.value)}
+                                                            placeholder="Viết ký ức mới của bạn ở đây..."
+                                                            className="w-full flex-1 bg-transparent text-stone-700 font-handwriting text-lg leading-[32px] resize-none focus:outline-none placeholder:text-stone-300/60"
+                                                            style={{ lineHeight: '32px' }}
+                                                        />
+                                                    ) : (
+                                                        <div
+                                                            className="w-full flex-1 text-stone-700 font-handwriting text-lg leading-[32px] overflow-y-auto pr-2 custom-scrollbar"
+                                                            style={{ lineHeight: '32px', whiteSpace: 'pre-wrap' }}
+                                                        >
+                                                            {currentPastEntry?.content}
                                                         </div>
-                                                    </div>
+                                                    )}
                                                 </motion.div>
                                             )}
                                         </AnimatePresence>
+
+                                        {/* Pagination Controls - Ẩn đi khi đang ở màn hình Success */}
+                                        {!isSuccess && (
+                                            <div className="absolute bottom-4 left-0 right-0 px-6 flex justify-between items-center text-stone-400">
+                                                <button
+                                                    onClick={prev_page}
+                                                    disabled={viewPage === 0}
+                                                    className="text-xs disabled:opacity-30 hover:text-faifo-terracotta transition-colors px-2 py-1"
+                                                >
+                                                    {viewPage > 0 ? '← Trước' : ''}
+                                                </button>
+                                                <span className="text-[10px] tracking-widest font-sans">
+                                                    {viewPage + 1} / {totalPages}
+                                                </span>
+                                                <button
+                                                    onClick={next_page}
+                                                    disabled={viewPage === totalPages - 1}
+                                                    className="text-xs disabled:opacity-30 hover:text-faifo-terracotta transition-colors px-2 py-1"
+                                                >
+                                                    {viewPage < totalPages - 1 ? 'Sau →' : ''}
+                                                </button>
+                                            </div>
+                                        )}
                                     </div>
                                 </motion.div>
                             )}
@@ -182,21 +222,34 @@ export default function JournalBook({ chipId, interactions, onSaveComplete }: Jo
                 </div>
             </MaterialReveal>
 
-            {/* Bottom controls — only when book is open */}
-            {
-                isOpen && currentPage === 0 && (
-                    <MaterialReveal delay={0.6} className="mt-6">
-                        <motion.button
-                            whileTap={{ scale: 0.97 }}
-                            onClick={handleSave}
-                            disabled={isSaving}
-                            className="px-8 py-3 rounded-xl bg-faifo-terracotta/20 border border-faifo-terracotta/40 text-stone-800 text-sm transition-colors duration-500 hover:bg-faifo-terracotta/30 disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                            {isSaving ? 'Đang lưu...' : 'Lưu ký ức ✨'}
-                        </motion.button>
-                    </MaterialReveal>
-                )
-            }
-        </motion.div >
+            {/* Bottom controls — only when book is open on the NEW page */}
+            {isOpen && isNewPage && !isSuccess && (
+                <MaterialReveal delay={0.6} className="mt-6 flex justify-center">
+                    <motion.button
+                        whileTap={{ scale: 0.97 }}
+                        onClick={handleSave}
+                        disabled={isSaving}
+                        className="px-8 py-3 rounded-xl bg-faifo-terracotta/20 border border-faifo-terracotta/40 text-stone-800 text-sm transition-colors duration-500 hover:bg-faifo-terracotta/30 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                        {isSaving
+                            ? 'Đang xử lý...'
+                            : entry.trim() ? 'Lưu ký ức ✨' : 'Gấp sổ lại 📖'}
+                    </motion.button>
+                </MaterialReveal>
+            )}
+
+            {/* Bottom controls — When reading PAST pages (Optionally add a button to jump to new page) */}
+            {isOpen && !isNewPage && !isSuccess && (
+                <MaterialReveal delay={0.2} className="mt-6 flex justify-center">
+                    <motion.button
+                        whileTap={{ scale: 0.97 }}
+                        onClick={() => setViewPage(totalPages - 1)}
+                        className="px-6 py-2 rounded-xl bg-stone-200 border border-stone-300 text-stone-600 text-xs transition-colors duration-500 hover:bg-stone-300"
+                    >
+                        Viết trang mới ✏️
+                    </motion.button>
+                </MaterialReveal>
+            )}
+        </motion.div>
     )
 }
