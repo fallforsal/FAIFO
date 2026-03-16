@@ -7,9 +7,6 @@ import { motion } from 'framer-motion'
 import * as THREE from 'three'
 import MaterialReveal from '@/components/animations/MaterialReveal'
 
-const DEFAULT_MODEL_URL = '/model/faifo-pottery.glb'
-useGLTF.preload(DEFAULT_MODEL_URL)
-
 interface PotteryViewerProps {
     onExplore: () => void
     isTransitioning?: boolean
@@ -19,6 +16,7 @@ interface PotteryViewerProps {
 }
 
 const PotteryModel = React.memo(function PotteryModel({ url }: { url: string }) {
+    // Sẽ lấy từ cache ra ngay lập tức vì đã được preload ở page.tsx
     const { scene } = useGLTF(url)
 
     useEffect(() => {
@@ -64,7 +62,8 @@ export default function PotteryViewer({
     productName,
     description,
 }: PotteryViewerProps) {
-    const resolvedModelUrl = modelUrl || DEFAULT_MODEL_URL
+    // Fallback URL phòng trường hợp DB trống, nhưng nên ưu tiên truyền modelUrl từ props
+    const resolvedModelUrl = modelUrl || '/model/faifo-pottery.glb'
 
     return (
         <div className="relative w-full h-screen" style={{ backgroundColor: '#F5F0E6' }}>
@@ -81,15 +80,14 @@ export default function PotteryViewer({
                 style={{ background: '#F5F0E6' }}
             >
                 <color attach="background" args={['#F5F0E6']} />
+
+                {/* Fallback là null vì ta đã preload ở màn hình trước, nó sẽ hiện ra rất nhanh */}
                 <Suspense fallback={null}>
                     <PotteryModel url={resolvedModelUrl} />
                 </Suspense>
 
-                {/* @ts-ignore */}
                 <ambientLight intensity={0.7} color="#fff5e6" />
-                {/* @ts-ignore */}
                 <pointLight position={[4, 5, 4]} intensity={1.0} color="#ffeedd" />
-                {/* @ts-ignore */}
                 <pointLight position={[-3, -1, 3]} intensity={0.4} color="#e8ddd4" />
 
                 <OrbitControls
@@ -103,7 +101,7 @@ export default function PotteryViewer({
                 />
             </Canvas>
 
-            {/* Overlay — pointer-events-none so Canvas stays interactive */}
+            {/* UI Overlay */}
             <div className={`absolute inset-0 pointer-events-none flex flex-col justify-between p-6 z-20 transition-opacity duration-1000 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
                 <div className="text-center mt-4">
                     <MaterialReveal delay={0.5}>
@@ -120,11 +118,7 @@ export default function PotteryViewer({
                                 {description ? (
                                     <p>{description}</p>
                                 ) : (
-                                    <>
-                                        <p>🏺 <span className="text-stone-800">Chất liệu:</span> Đất sét truyền thống, nung thủ công</p>
-                                        <p>🤲 Hoàn toàn làm tay — không có hai chiếc giống nhau</p>
-                                        <p>🌿 <span className="text-stone-800">Kích thước / màu men:</span> Tùy chiếc</p>
-                                    </>
+                                    <p>Đang tải mô tả tác phẩm...</p>
                                 )}
                             </div>
                         </div>
