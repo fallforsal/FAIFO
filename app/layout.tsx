@@ -1,6 +1,8 @@
 import './globals.css'
 import type { Metadata, Viewport } from 'next'
 import { Inter, Playfair_Display, Caveat } from 'next/font/google'
+import { ShopHeader } from "@/components/shop/header"
+import { Footer } from "@/components/layout/Footer"
 
 const inter = Inter({ subsets: ['latin', 'vietnamese'], variable: '--font-inter' })
 const playfair = Playfair_Display({ subsets: ['latin', 'vietnamese'], variable: '--font-playfair' })
@@ -23,7 +25,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 5,
   userScalable: true,
-  themeColor: '#F5F0E6',
+  themeColor: '#FDF9F3',
 }
 
 export default function RootLayout({
@@ -33,8 +35,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="vi" className={`${inter.variable} ${playfair.variable} ${caveat.variable}`}>
-      <body className="bg-[#F5F0E6] text-stone-800">
-        {children}
+      <body className="bg-[#FDF9F3] text-stone-800 flex flex-col min-h-screen">
+        <ShopHeader />
+        <main className="flex-grow">
+          {children}
+        </main>
+        <Footer />
       </body>
     </html>
   )
