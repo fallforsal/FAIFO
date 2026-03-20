@@ -1,18 +1,16 @@
-import { ShopHeader } from '@/components/shop/header';
 
-export const metadata = {
-  title: 'Product Detail - Gốm Hội An',
-  description: 'Explore our traditional Hoi An ceramic products',
-};
+import { GlobalLayoutWrapper } from '@/components/layout/GlobalLayoutWrapper'; // Bạn sẽ tạo file này ở Bước 3
+// ... các import khác ...
 
-export default function ProductDetailLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen bg-hoiAnBg">
-      {children}
-    </div>
+    <html lang="vi">
+      <body className="font-light antialiased text-[#2D2926] bg-[#FDF9F3]">
+        {/* Bao bọc toàn bộ App bằng Wrapper */}
+        <GlobalLayoutWrapper>
+          {children}
+        </GlobalLayoutWrapper>
+      </body>
+    </html>
   );
 }

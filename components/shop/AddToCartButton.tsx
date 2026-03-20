@@ -1,31 +1,36 @@
 "use client";
 
-import { useCartStore } from '@/store/useCartStore';
+import { useCartStore } from "@/store/useCartStore";
 
-interface ProductProps {
-  id: string;
-  name: string;
-  price: number;
-  description: string;
-  stock_quantity: number;
-  images: string[];
-}
-
-export function AddToCartButton({ product }: { product: ProductProps }) {
+export function AddToCartButton({ product }: { product: any }) {
+  // Lôi thêm hàm openCart từ bộ não Zustand ra
   const addItem = useCartStore((state) => state.addItem);
   const openCart = useCartStore((state) => state.openCart);
 
   const handleAddToCart = () => {
-    addItem({ id: product.id, name: product.name, price: product.price, image: product.images[0] });
+    // ĐÃ XÓA dòng quantity: 1 để chiều lòng TypeScript
+    addItem({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: Array.isArray(product.images) && product.images.length > 0
+        ? product.images[0]
+        : 'https://images.unsplash.com/photo-1610701596007-11502861dcfa?q=80&w=200'
+    });
+
+    // Thêm thành công thì tự động kéo mở Sidebar Giỏ hàng ra cho sang trọng!
     openCart();
   };
+
+  const isOutOfStock = product.stock_quantity <= 0;
 
   return (
     <button
       onClick={handleAddToCart}
-      className="w-full bg-[#1A1A1A] text-white py-4 px-6 font-serif text-lg tracking-widest hover:bg-[#C0593E] transition-colors duration-300"
+      disabled={isOutOfStock}
+      className="w-full bg-[#1A1A1A] hover:bg-black text-[#FDF9F3] py-4 font-sans text-[13px] tracking-widest transition-colors disabled:opacity-50 disabled:cursor-not-allowed uppercase"
     >
-      Thêm vào giỏ hàng
+      {isOutOfStock ? "Hết tác phẩm" : "Thêm vào giỏ hàng"}
     </button>
   );
 }

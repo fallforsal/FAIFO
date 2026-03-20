@@ -4,6 +4,7 @@ import { FeaturedProducts } from "@/components/shop/FeaturedProducts";
 import { RecentlyViewed } from "@/components/shop/RecentlyViewed";
 import { getProductById } from '@/app/actions/product.actions';
 import { TrackViewedItem } from '@/components/shop/TrackViewedItem';
+import { ProductImageGallery } from '@/components/shop/ProductImageGallery';
 
 export const dynamic = 'force-dynamic';
 interface PageProps {
@@ -44,26 +45,10 @@ export default async function ProductDetailPage({ params }: PageProps) {
       <div className="max-w-7xl mx-auto grid md:grid-cols-12 gap-16 items-start">
 
         {/* Cột Trái: Hình ảnh (Mobile Carousel trượt ngang, Desktop xếp dọc) */}
-        <div className="md:col-span-7 w-full min-w-0">
-          {/* min-w-0 là ma thuật giúp container không bị phình to phá layout */}
+        <ProductImageGallery images={validImages} altText={product.name} />
 
-          <div className="flex md:flex-col overflow-x-auto md:overflow-visible snap-x snap-mandatory hide-scrollbar gap-2 md:gap-12 pb-4 md:pb-0">
-            {validImages.map((img: string, idx: number) => (
-              <div
-                key={idx}
-                className="w-full flex-none snap-center"
-              >
-                {/* Trên mobile ảnh sẽ là hình vuông (aspect-square), lên máy tính tự giãn (md:aspect-auto) */}
-                <img
-                  src={img}
-                  alt={`${product.name} - Góc nhìn ${idx + 1}`}
-                  className="w-full aspect-square md:aspect-auto object-cover bg-[#FDF9F3]"
-                  loading={idx === 0 ? "eager" : "lazy"}
-                />
-              </div>
-            ))}
-          </div>
-        </div>
+
+
 
         {/* Cột Phải: Thông tin */}
         <div className="md:col-span-5 flex flex-col sticky top-32">
