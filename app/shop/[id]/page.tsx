@@ -29,8 +29,7 @@ export default async function ProductDetailPage({ params }: PageProps) {
   // 3. Lấy data thật
   const product = result.data;
 
-  console.log("MẢNG HÌNH ẢNH TỪ DB:", product.images);
-  console.log("SỐ LƯỢNG ẢNH:", product.images?.length);
+
   // Xử lý an toàn mảng hình ảnh (phòng hờ DB rỗng)
   const validImages: string[] = Array.isArray(product.images) && product.images.length > 0
     ? (product.images as string[])
