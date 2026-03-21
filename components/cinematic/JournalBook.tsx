@@ -204,7 +204,7 @@ export default function JournalBook({ chipId, interactions = [], onSaveComplete 
                                         Nhật Ký
                                     </span>
                                     <span className="text-xs text-stone-500/60 tracking-[0.2em]">
-                                        FAIFO
+                                        Chuyện Trong Tay
                                     </span>
                                     <div className="w-16 h-px bg-faifo-terracotta/30" />
 

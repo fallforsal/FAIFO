@@ -1,23 +1,37 @@
 "use client";
-
+import { useTransition } from 'react';
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useCartStore } from "@/store/useCartStore"; // Lắp bộ não Zustand vào đây
-
+import { useRouter } from "next/navigation";
 export function CartSidebar({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
-  // Lôi data và các hàm xử lý từ Store ra
-  const { items, removeItem, updateQuantity, getTotalPrice } = useCartStore();
-
-  // Khắc phục lỗi Hydration của Next.js khi dùng LocalStorage
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+  const items = useCartStore((state) => state.items);
+  const note = useCartStore((state) => state.note);
+  const updateNote = useCartStore((state) => state.updateNote);
+  const removeItem = useCartStore((state) => state.removeItem);
+  const updateQuantity = useCartStore((state) => state.updateQuantity);
+  const getTotalPrice = useCartStore((state) => state.getTotalPrice);
+  const [isNoteOpen, setIsNoteOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   useEffect(() => {
     setIsMounted(true);
-  }, []);
+    if (note.length > 0) setIsNoteOpen(true);
+  }, [note]);
 
   if (!isOpen || !isMounted) return null;
 
   // Lấy tổng tiền trực tiếp từ Store
   const total = getTotalPrice();
+
+  const handleGoToCheckout = () => {
+    // 1. Đóng Sidebar ngay để UI trông có vẻ mượt
+    onClose();
+
+
+    window.location.href = "/checkout";
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex justify-end">
@@ -92,26 +106,48 @@ export function CartSidebar({ isOpen, onClose }: { isOpen: boolean; onClose: () 
         {items.length > 0 && (
           <div className="p-6 bg-white space-y-6">
             {/* Section Thêm ghi chú */}
-            <button className="flex justify-between items-center w-full py-4 border-t border-b border-gray-100 text-[13px] text-[#2D2926] font-sans hover:text-gray-500 transition-colors">
-              <span>Thêm ghi chú</span>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1"><path d="M12 5v14M5 12h14" /></svg>
+            <button
+              onClick={() => setIsNoteOpen(!isNoteOpen)}
+              className="flex justify-between items-center w-full py-4 text-[11px] tracking-[0.15em] uppercase text-[#2D2926]/70 hover:text-[#2D2926] transition-colors focus:outline-none"
+            >
+              <span>{note ? 'Ghi chú của bạn' : 'Thêm ghi chú'}</span>
+              <span className="text-xl font-extralight leading-none">
+                {isNoteOpen ? '-' : '+'}
+              </span>
             </button>
+            <div
+              className={`overflow-hidden transition-all duration-500 ease-in-out ${isNoteOpen ? 'max-h-40 opacity-100 mb-6' : 'max-h-0 opacity-0'
+                }`}
+            >
+              <textarea
+                value={note}
+                onChange={(e) => updateNote(e.target.value)}
+                className="w-full bg-transparent border border-[#2D2926]/10 p-4 text-[13px] font-light focus:outline-none focus:border-[#2D2926]/30 resize-none transition-colors placeholder:text-[#2D2926]/40 placeholder:font-extralight"
+                rows={3}
+                placeholder="Lời nhắn cho nghệ nhân hoặc shipper..."
+              ></textarea>
 
+              {note && (
+                <p className="text-[10px] text-gray-400 mt-2 font-extralight italic">
+                  * Ghi chú đã được lưu tự động
+                </p>
+              )}
+            </div>
             {/* Dòng text lưu ý */}
             <div className="text-center text-[11px] text-[#2D2926]/60 font-sans tracking-wide">
               Đã bao gồm thuế. Phí vận chuyển được tính khi thanh toán.
             </div>
 
             {/* Nút Thanh Toán Đen */}
-            <Link
-              href="/checkout"
-              onClick={onClose}
+            <button
+              disabled={isPending}
+              onClick={handleGoToCheckout}
               className="w-full bg-[#1A1A1A] hover:bg-black text-[#FDF9F3] py-4 font-sans text-[13px] tracking-widest transition-colors flex justify-center items-center gap-2 rounded-sm"
             >
               <span>Thanh toán</span>
               <span className="text-[10px] opacity-60">•</span>
               <span>{total.toLocaleString('vi-VN')} ₫</span>
-            </Link>
+            </button>
 
             {/* Link xem giỏ hàng */}
             <div className="text-center">

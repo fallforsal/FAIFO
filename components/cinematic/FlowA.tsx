@@ -98,7 +98,7 @@ export default function FlowA({ onComplete, onBack }: FlowAProps) {
                         <MaterialReveal delay={1.4} className="text-center max-w-xs mt-8">
                             <p className="text-sm text-stone-600 leading-relaxed">
                                 Cảm ơn bạn đã tin tưởng và chọn mang về một phần của{' '}
-                                <span className="text-faifo-terracotta font-serif italic">Faifo</span>
+                                <span className="text-faifo-terracotta font-serif italic">Chuyện Trong Tay</span>
                                 {' '} — tên cũ của Hội An...
                             </p>
                         </MaterialReveal>

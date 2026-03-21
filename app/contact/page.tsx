@@ -32,11 +32,11 @@ export default function ContactPage() {
                 Chúng tôi luôn lắng nghe những câu chuyện và giải đáp thắc mắc của bạn về tác phẩm gốm cũng như trải nghiệm lưu giữ ký ức số.
               </p>
             </div>
-            
+
             <div className="font-sans text-sm uppercase tracking-widest space-y-8">
               <div>
                 <p className="text-[#2D2926]/40 mb-2 text-[11px]">Email</p>
-                <p className="text-base">chuyentrongtay@faifo.vn</p>
+                <p className="text-base">chuyentrongtay@gmail.vn</p>
               </div>
               <div>
                 <p className="text-[#2D2926]/40 mb-2 text-[11px]">Điện thoại</p>
@@ -48,38 +48,38 @@ export default function ContactPage() {
           {/* Cột Phải: Form */}
           <form onSubmit={handleSubmit} className="flex flex-col space-y-10 font-sans">
             <div className="relative">
-              <input 
-                type="text" 
+              <input
+                type="text"
                 required
                 value={formData.name}
-                onChange={e => setFormData({...formData, name: e.target.value})}
+                onChange={e => setFormData({ ...formData, name: e.target.value })}
                 placeholder="Tên của bạn *"
                 className="w-full bg-transparent border-b border-[#2D2926]/20 py-3 text-[13px] focus:outline-none focus:border-[#2D2926] transition-colors placeholder:text-[#2D2926]/40 uppercase tracking-widest"
               />
             </div>
             <div className="relative">
-              <input 
-                type="email" 
+              <input
+                type="email"
                 required
                 value={formData.email}
-                onChange={e => setFormData({...formData, email: e.target.value})}
+                onChange={e => setFormData({ ...formData, email: e.target.value })}
                 placeholder="Email *"
                 className="w-full bg-transparent border-b border-[#2D2926]/20 py-3 text-[13px] focus:outline-none focus:border-[#2D2926] transition-colors placeholder:text-[#2D2926]/40 uppercase tracking-widest"
               />
             </div>
             <div className="relative mt-4">
-              <textarea 
+              <textarea
                 required
                 rows={5}
                 value={formData.message}
-                onChange={e => setFormData({...formData, message: e.target.value})}
+                onChange={e => setFormData({ ...formData, message: e.target.value })}
                 placeholder="Lời nhắn..."
                 className="w-full bg-transparent border-b border-[#2D2926]/20 py-3 text-[15px] focus:outline-none focus:border-[#2D2926] transition-colors placeholder:text-[#2D2926]/40 resize-none font-serif tracking-normal"
               />
             </div>
-            
-            <button 
-              type="submit" 
+
+            <button
+              type="submit"
               disabled={isSubmitting}
               className="bg-[#2D2926] text-[#FDF9F3] py-5 px-10 uppercase tracking-[0.2em] text-xs font-sans hover:bg-black transition-colors disabled:opacity-70 self-start mt-4"
             >

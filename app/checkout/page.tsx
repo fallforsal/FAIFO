@@ -6,12 +6,14 @@ import { useCartStore } from '@/store/useCartStore';
 import { Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
+import { createOrder } from '@/app/actions/order.actions';
 
-const InputField = ({ label, type = "text", required = true, placeholder = "" }: { label: string, type?: string, required?: boolean, placeholder?: string }) => (
+const InputField = ({ label, name, type = "text", required = true, placeholder = "" }: { label: string, name: string, type?: string, required?: boolean, placeholder?: string }) => (
   <div className="space-y-2">
     <label className="block text-sm font-sans tracking-wide text-[#2D2926]/80">{label}</label>
-    <input 
-      type={type} 
+    <input
+      type={type}
+      name={name}
       required={required}
       placeholder={placeholder}
       className={cn(
@@ -25,22 +27,57 @@ const InputField = ({ label, type = "text", required = true, placeholder = "" }:
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { items, getTotalPrice, clearCart } = useCartStore();
+  const { items, note, updateNote, getTotalPrice, clearCart } = useCartStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState('cod');
 
   const totalPrice = getTotalPrice();
   const shippingFee = paymentMethod === 'cod' ? 30000 : 0;
 
-  const handleCheckout = (e: React.FormEvent) => {
+  const handleCheckout = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (items.length === 0) return;
+
     setIsSubmitting(true);
 
-    // Fake API interaction for 2 seconds
-    setTimeout(() => {
-      clearCart();
-      router.push('/checkout/success');
-    }, 2000);
+    try {
+      // 1. Lấy data từ Form
+      const formData = new FormData(e.currentTarget);
+
+      const orderPayload = {
+        customer_name: formData.get('fullname') as string,
+        customer_phone: formData.get('phone') as string,
+        customer_email: formData.get('email') as string,
+        shipping_address: formData.get('address') as string,
+        total_amount: totalPrice + shippingFee,
+        shipping_fee: shippingFee,
+        payment_method: paymentMethod,
+        notes: note
+      };
+
+      // 2. Chuyển đổi định dạng cart items cho API
+      const cartItemsForDb = items.map(item => ({
+        product_id: item.id,
+        quantity: item.quantity,
+        unit_price: item.price
+      }));
+
+      // 3. Gọi Server Action (Ghi vào DB + Trừ kho)
+      const result = await createOrder(orderPayload, cartItemsForDb);
+
+      if (result.success) {
+        // 4. Thành công: Xóa giỏ và biến mất!
+        clearCart();
+        router.push(`/checkout/success?orderId=${result.data?.order_id}`);
+      } else {
+        // Hiển thị lỗi từ DB (ví dụ: Hết hàng)
+        alert(`Đặt hàng thất bại: ${result.error}`);
+      }
+    } catch (error) {
+      alert("Đã có lỗi hệ thống xảy ra. Vui lòng thử lại sau.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -52,43 +89,57 @@ export default function CheckoutPage() {
           </Link>
           <h1 className="text-4xl font-light mt-4">Thanh toán</h1>
         </div>
-        
+
         <form onSubmit={handleCheckout} className="grid lg:grid-cols-12 gap-12 items-start">
           {/* Cột Trái: Thông tin Giao hàng & Thanh toán */}
           <div className="lg:col-span-7 space-y-12">
-            
+
             {/* Section 1: Thông tin giao hàng */}
             <section>
               <h2 className="text-2xl mb-6 border-b border-[#2D2926]/10 pb-4">Thông tin giao hàng</h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div className="sm:col-span-2">
-                  <InputField label="Họ và tên" placeholder="Nhập đầy đủ họ tên" />
+                  <InputField name="fullname" label="Họ và tên" placeholder="Nhập đầy đủ họ tên" />
                 </div>
-                <InputField label="Số điện thoại" type="tel" placeholder="090 123 4567" />
-                <InputField label="Email" type="email" placeholder="email@example.com" />
+                <InputField name="phone" label="Số điện thoại" type="tel" placeholder="090 123 4567" />
+                <InputField name="email" label="Email" type="email" placeholder="email@example.com" />
                 <div className="sm:col-span-2">
-                  <InputField label="Địa chỉ nhận hàng" placeholder="Số nhà, Đường, Giao lộ..." />
+                  <InputField name="address" label="Địa chỉ nhận hàng" placeholder="Số nhà, Đường, Giao lộ..." />
                 </div>
               </div>
             </section>
-
-            {/* Section 2: Phương thức thanh toán */}
+            {/* Section 2: Ghi chú đơn hàng */}
+            <section className="animate-in fade-in slide-in-from-bottom-4 duration-700">
+              <h2 className="text-2xl mb-6 border-b border-[#2D2926]/10 pb-4">Ghi chú đơn hàng</h2>
+              <div className="space-y-2">
+                <p className="text-[13px] font-sans text-[#2D2926]/60 mb-2">
+                  Bạn có lời nhắn gì cho nghệ nhân hay đơn vị vận chuyển không?
+                </p>
+                <textarea
+                  value={note}
+                  onChange={(e) => updateNote(e.target.value)}
+                  placeholder="..."
+                  className="w-full bg-transparent border border-[#2D2926]/20 rounded-md px-4 py-4 font-sans text-sm min-h-[120px] focus:outline-none focus:border-[#2D2926] focus:ring-1 focus:ring-[#2D2926] transition-all"
+                />
+              </div>
+            </section>
+            {/* Section 3: Phương thức thanh toán */}
             <section>
               <h2 className="text-2xl mb-6 border-b border-[#2D2926]/10 pb-4">Phương thức thanh toán</h2>
               <div className="space-y-4 font-sans">
-                
+
                 {/* Credit Card */}
                 <label className={cn(
                   "block border rounded-lg p-4 cursor-pointer transition-colors",
                   paymentMethod === 'credit-card' ? "border-[#2D2926] bg-[#2D2926]/5" : "border-[#2D2926]/20 hover:border-[#2D2926]/50"
                 )}>
                   <div className="flex items-center gap-3">
-                    <input 
-                      type="radio" 
+                    <input
+                      type="radio"
                       name="payment_method"
-                      className="w-4 h-4 accent-[#2D2926]" 
-                      checked={paymentMethod === 'credit-card'} 
-                      onChange={() => setPaymentMethod('credit-card')} 
+                      className="w-4 h-4 accent-[#2D2926]"
+                      checked={paymentMethod === 'credit-card'}
+                      onChange={() => setPaymentMethod('credit-card')}
                     />
                     <span className="font-medium text-[15px]">Thẻ thanh toán quốc tế (Visa / Mastercard / JCB)</span>
                   </div>
@@ -96,26 +147,26 @@ export default function CheckoutPage() {
                   {paymentMethod === 'credit-card' && (
                     <div className="mt-4 pt-4 border-t border-[#2D2926]/10 grid grid-cols-2 gap-4">
                       <div className="col-span-2">
-                        <InputField label="Số thẻ" type="text" placeholder="0000 0000 0000 0000" />
+                        <InputField name="card_number" label="Số thẻ" type="text" placeholder="0000 0000 0000 0000" />
                       </div>
-                      <InputField label="Ngày hết hạn" type="text" placeholder="MM/YY" />
-                      <InputField label="Mã bảo mật (CVV)" type="text" placeholder="123" />
+                      <InputField name="card_expiry" label="Ngày hết hạn" type="text" placeholder="MM/YY" />
+                      <InputField name="card_cvv" label="Mã bảo mật (CVV)" type="text" placeholder="123" />
                     </div>
                   )}
                 </label>
-                
+
                 {/* Ví điện tử */}
                 <label className={cn(
                   "block border rounded-lg p-4 cursor-pointer transition-colors",
                   paymentMethod === 'ewallet' ? "border-[#2D2926] bg-[#2D2926]/5" : "border-[#2D2926]/20 hover:border-[#2D2926]/50"
                 )}>
                   <div className="flex items-center gap-3">
-                    <input 
-                      type="radio" 
+                    <input
+                      type="radio"
                       name="payment_method"
-                      className="w-4 h-4 accent-[#2D2926]" 
-                      checked={paymentMethod === 'ewallet'} 
-                      onChange={() => setPaymentMethod('ewallet')} 
+                      className="w-4 h-4 accent-[#2D2926]"
+                      checked={paymentMethod === 'ewallet'}
+                      onChange={() => setPaymentMethod('ewallet')}
                     />
                     <span className="font-medium text-[15px]">Thanh toán qua Ví điện tử (VNPay / MoMo)</span>
                   </div>
@@ -138,12 +189,12 @@ export default function CheckoutPage() {
                   paymentMethod === 'atm' ? "border-[#2D2926] bg-[#2D2926]/5" : "border-[#2D2926]/20 hover:border-[#2D2926]/50"
                 )}>
                   <div className="flex items-center gap-3">
-                    <input 
-                      type="radio" 
+                    <input
+                      type="radio"
                       name="payment_method"
-                      className="w-4 h-4 accent-[#2D2926]" 
-                      checked={paymentMethod === 'atm'} 
-                      onChange={() => setPaymentMethod('atm')} 
+                      className="w-4 h-4 accent-[#2D2926]"
+                      checked={paymentMethod === 'atm'}
+                      onChange={() => setPaymentMethod('atm')}
                     />
                     <span className="font-medium text-[15px]">Thẻ ATM nội địa (Internet Banking)</span>
                   </div>
@@ -166,12 +217,12 @@ export default function CheckoutPage() {
                   paymentMethod === 'cod' ? "border-[#2D2926] bg-[#2D2926]/5" : "border-[#2D2926]/20 hover:border-[#2D2926]/50"
                 )}>
                   <div className="flex items-center gap-3">
-                    <input 
-                      type="radio" 
+                    <input
+                      type="radio"
                       name="payment_method"
-                      className="w-4 h-4 accent-[#2D2926]" 
-                      checked={paymentMethod === 'cod'} 
-                      onChange={() => setPaymentMethod('cod')} 
+                      className="w-4 h-4 accent-[#2D2926]"
+                      checked={paymentMethod === 'cod'}
+                      onChange={() => setPaymentMethod('cod')}
                     />
                     <span className="font-medium text-[15px]">Thanh toán khi nhận hàng (COD)</span>
                   </div>
@@ -193,7 +244,7 @@ export default function CheckoutPage() {
           <div className="lg:col-span-5 relative">
             <div className="bg-white/50 backdrop-blur-sm p-6 sm:p-8 rounded-xl border border-[#2D2926]/10 sticky top-24 font-sans shadow-sm">
               <h2 className="font-serif text-2xl mb-6 border-b border-[#2D2926]/10 pb-4">Tóm tắt đơn hàng</h2>
-              
+
               <div className="space-y-6 mb-6 max-h-[40vh] overflow-y-auto pr-2 custom-scrollbar">
                 {items.length === 0 ? (
                   <p className="text-sm text-[#2D2926]/60 italic">Chưa có sản phẩm nào trong giỏ hàng.</p>
@@ -237,8 +288,8 @@ export default function CheckoutPage() {
                 </div>
               </div>
 
-              <button 
-                type="submit" 
+              <button
+                type="submit"
                 disabled={isSubmitting || items.length === 0}
                 className={cn(
                   "w-full bg-[#2D2926] text-[#FDF9F3] py-4 rounded-md font-sans text-lg transition-colors flex items-center justify-center gap-2",

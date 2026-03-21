@@ -25,7 +25,7 @@ export function Footer() {
           {/* Navigation Links */}
           <div className="space-y-4">
             <h3 className="font-serif text-sm font-semibold text-gray-900">
-              Menu
+              DANH MỤC
             </h3>
             <ul className="space-y-2">
               <li>
@@ -33,7 +33,7 @@ export function Footer() {
                   href="/"
                   className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
                 >
-                  Home
+                  Trang chủ
                 </Link>
               </li>
               <li>
@@ -41,7 +41,7 @@ export function Footer() {
                   href="/shop"
                   className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
                 >
-                  Shop
+                  Sản Phẩm
                 </Link>
               </li>
               <li>
@@ -49,7 +49,7 @@ export function Footer() {
                   href="/about"
                   className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
                 >
-                  About Us
+                  Về chúng tôi
                 </Link>
               </li>
             </ul>
@@ -58,7 +58,7 @@ export function Footer() {
           {/* Additional Links */}
           <div className="space-y-4">
             <h3 className="font-serif text-sm font-semibold text-gray-900">
-              Information
+              THÔNG TIN
             </h3>
             <ul className="space-y-2">
               <li>
@@ -66,7 +66,7 @@ export function Footer() {
                   href="#"
                   className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
                 >
-                  Contact
+                  Liên Hệ
                 </a>
               </li>
               <li>
@@ -74,7 +74,7 @@ export function Footer() {
                   href="#"
                   className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
                 >
-                  Privacy Policy
+                  Chính sách bảo mật
                 </a>
               </li>
             </ul>
@@ -83,7 +83,7 @@ export function Footer() {
           {/* Social Links */}
           <div className="space-y-4">
             <h3 className="font-serif text-sm font-semibold text-gray-900">
-              Follow Us
+              KẾT NỐI
             </h3>
             <ul className="space-y-2">
               <li>
@@ -109,7 +109,7 @@ export function Footer() {
         {/* Copyright */}
         <div className="mt-8 border-t border-gray-200 pt-8 text-center">
           <p className="text-sm text-gray-600">
-            © {currentYear} FAIFO. All rights reserved.
+            © {currentYear} Chuyện Trong Tay. All rights reserved.
           </p>
         </div>
       </div>

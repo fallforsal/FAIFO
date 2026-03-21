@@ -1,16 +1,17 @@
 
-import { GlobalLayoutWrapper } from '@/components/layout/GlobalLayoutWrapper'; // Bạn sẽ tạo file này ở Bước 3
-// ... các import khác ...
+export const metadata = {
+  title: 'Chi tiết tác phẩm - CHUYỆN TRONG TAY',
+  description: 'Khám phá câu chuyện được thổi vào đất nung',
+};
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function ProductDetailLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <html lang="vi">
-      <body className="font-light antialiased text-[#2D2926] bg-[#FDF9F3]">
-        {/* Bao bọc toàn bộ App bằng Wrapper */}
-        <GlobalLayoutWrapper>
-          {children}
-        </GlobalLayoutWrapper>
-      </body>
-    </html>
+    <div className="min-h-screen bg-[#FDF9F3] text-[#2D2926]">
+      {children}
+    </div>
   );
 }

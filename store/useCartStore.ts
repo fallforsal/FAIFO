@@ -11,6 +11,8 @@ export interface CartItem {
 
 interface CartStore {
   items: CartItem[];
+  note: string;
+  updateNote: (note: string) => void;
   isCartOpen: boolean;
   openCart: () => void;
   closeCart: () => void;
@@ -26,6 +28,7 @@ export const useCartStore = create<CartStore>()(
   persist(
     (set, get) => ({
       items: [],
+      note: '',
       isCartOpen: false,
       openCart: () => set({ isCartOpen: true }),
       closeCart: () => set({ isCartOpen: false }),
@@ -48,9 +51,13 @@ export const useCartStore = create<CartStore>()(
         }),
 
       removeItem: (id) =>
-        set((state) => ({
-          items: state.items.filter((item) => item.id !== id),
-        })),
+        set((state) => {
+          const newItems = state.items.filter((item) => item.id !== id);
+          return {
+            items: newItems,
+            note: newItems.length === 0 ? '' : state.note,
+          };
+        }),
 
       updateQuantity: (id, quantity) =>
         set((state) => {
@@ -66,7 +73,9 @@ export const useCartStore = create<CartStore>()(
           };
         }),
 
-      clearCart: () => set({ items: [] }),
+      updateNote: (note) => set({ note }),
+
+      clearCart: () => set({ items: [], note: '' }),
 
       getTotalPrice: () => {
         return get().items.reduce((total, item) => total + item.price * item.quantity, 0);

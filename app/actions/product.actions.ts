@@ -29,26 +29,51 @@ interface ActionResult<T = undefined> {
 /**
  * Fetch all purchasable products (in-stock only).
  */
-export async function getProducts(): Promise<ActionResult<Product[]>> {
+export async function getProducts(params?: { sort?: string; category?: string; q?: string }) {
     try {
-        const { data, error } = await supabaseServer
-            .from('products')
-            .select('*')
-            .gt('stock_quantity', 0)
-            .order('created_at', { ascending: false })
+        let query = supabaseServer.from('products').select('*')
 
-        if (error) {
-            console.error('[getProducts] query failed:', error)
-            return { success: false, error: error.message }
+        // 1. Lọc theo Category (Từ Header hoặc CategorySearch)
+        if (params?.category) {
+            query = query.eq('category', params.category)
         }
 
-        return { success: true, data: data as Product[] }
-    } catch (err) {
-        console.error('[getProducts] unexpected error:', err)
-        return {
-            success: false,
-            error: err instanceof Error ? err.message : 'Unknown error',
+        // 2. Tìm kiếm theo Tên (Từ Header)
+        if (params?.q) {
+            query = query.ilike('name', `%${params.q}%`)
         }
+
+        // 3. Sắp xếp (Từ thanh Toolbar FEATURED)
+        if (params?.sort) {
+            switch (params.sort) {
+                case 'price-asc':
+                    query = query.order('price', { ascending: true })
+                    break;
+                case 'price-desc':
+                    query = query.order('price', { ascending: false })
+                    break;
+                case 'new-arrivals':
+                    query = query.order('created_at', { ascending: false })
+                    break;
+                case 'best-selling':
+                    // Cái này hơi khó nếu ông chưa có cột sales_count. Tạm thời xếp theo view hoặc ngẫu nhiên
+                    query = query.order('created_at', { ascending: true })
+                    break;
+                default:
+                    query = query.order('created_at', { ascending: false })
+            }
+        } else {
+            // Mặc định là mới nhất
+            query = query.order('created_at', { ascending: false })
+        }
+
+        const { data, error } = await query
+
+        if (error) throw error
+        return { success: true, data }
+    } catch (error) {
+        console.error('Lỗi khi lấy sản phẩm:', error)
+        return { success: false, data: null }
     }
 }
 

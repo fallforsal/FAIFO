@@ -8,18 +8,22 @@ const formatPrice = (price: number) => {
   return price.toLocaleString('vi-VN') + 'đ';
 };
 
+// Cập nhật interface: Thêm className vào để Next.js không báo lỗi đỏ
 interface ProductGridProps {
+  searchParams: { sort?: string; category?: string; q?: string };
   className?: string;
 }
 
-export async function ProductGrid({ className }: ProductGridProps) {
-  // Gọi trực tiếp Server Action để lấy data thật từ DB
-  const result = await getProducts();
+// BƯỚC 1: Hứng searchParams ở đây
+export async function ProductGrid({ searchParams, className }: ProductGridProps) {
+
+  // BƯỚC 2: Truyền searchParams vào API để báo cho DB biết ông muốn lọc/sắp xếp thế nào
+  const result = await getProducts(searchParams);
   const products = result.success && result.data ? result.data : [];
 
   if (products.length === 0) {
     return (
-      <div className="text-center py-20 font-serif text-gray-500">
+      <div className="text-center py-20 font-serif text-[#2D2926]/50 uppercase tracking-widest text-[13px]">
         Hiện tại chưa có tác phẩm nào trong cửa hàng.
       </div>
     );
@@ -38,9 +42,8 @@ export async function ProductGrid({ className }: ProductGridProps) {
   );
 }
 
-// Bắt buộc phải có type bất kỳ (any) hoặc type chuẩn từ DB, ở đây tôi dùng Type nhanh
+// Giữ nguyên ProductCard của ông
 function ProductCard({ product }: { product: any }) {
-  // Lấy ảnh đầu tiên trong mảng images, nếu mảng rỗng thì dùng ảnh mặc định
   const thumbnailUrl = Array.isArray(product.images) && product.images.length > 0
     ? product.images[0]
     : 'https://images.unsplash.com/photo-1610701596007-11502861dcfa?q=80&w=800';
@@ -48,18 +51,18 @@ function ProductCard({ product }: { product: any }) {
   return (
     <div className="group">
       <Link href={`/shop/${product.id}`} className="block">
-        <div className="relative h-64 overflow-hidden rounded-lg bg-[#FDF9F3]">
+        <div className="relative h-64 overflow-hidden rounded-sm bg-[#FDF9F3]">
           <img
             src={thumbnailUrl}
             alt={product.name}
-            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105 mix-blend-multiply"
           />
         </div>
         <div className="mt-4 space-y-2">
-          <h3 className="font-serif text-lg text-[#2D2926] uppercase tracking-wide truncate">
+          <h3 className="font-serif text-[14px] text-[#2D2926] leading-relaxed line-clamp-2 font-light">
             {product.name}
           </h3>
-          <p className="font-sans text-sm font-semibold text-[#2D2926]">
+          <p className="font-sans text-[13px] font-medium text-[#2D2926]">
             {formatPrice(product.price)}
           </p>
         </div>

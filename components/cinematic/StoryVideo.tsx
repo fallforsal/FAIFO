@@ -100,7 +100,7 @@ export default function StoryVideo({ onNext, videoUrl }: StoryVideoProps) {
                     "Mỗi chiếc gốm là một câu chuyện đang chờ được kể tiếp — bởi chính bạn."
                 </p>
                 <p className="text-xs text-stone-600 mt-3">
-                    — Storytellers of Faifo
+                    — CHUYỆN TRONG TAY —
                 </p>
             </MaterialReveal>
 

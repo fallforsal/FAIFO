@@ -31,7 +31,7 @@ export default function FinalScreen() {
 
                 <h2 className="font-serif text-2xl text-stone-800 mb-4 leading-relaxed">
                     Cảm ơn bạn đã lưu giữ<br />
-                    câu chuyện cùng Faifo
+                    câu chuyện cùng CHUYỆN TRONG TAY
                 </h2>
 
                 <p className="text-sm text-stone-600 leading-relaxed max-w-[280px] mx-auto mb-10">
@@ -52,7 +52,7 @@ export default function FinalScreen() {
             {/* Footer */}
             <MaterialReveal delay={0.6} className="mt-auto pt-12">
                 <p className="text-[10px] text-stone-500 text-center tracking-wider">
-                    Storytellers of Faifo · Handcrafted in Hội An
+                    CHUYỆN TRONG TAY · Handcrafted in Hội An
                 </p>
             </MaterialReveal>
         </motion.div>

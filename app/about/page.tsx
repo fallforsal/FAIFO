@@ -5,9 +5,9 @@ export default function AboutPage() {
     <main className="bg-[#FDF9F3] text-[#2D2926] min-h-screen">
       {/* Hero Section */}
       <section className="relative w-full aspect-video md:h-[70vh] bg-gray-200 overflow-hidden">
-        <img 
-          src="https://images.unsplash.com/photo-1610701596007-11502861dcfa?q=80&w=2000" 
-          alt="Lò gốm cổ" 
+        <img
+          src="https://images.unsplash.com/photo-1610701596007-11502861dcfa?q=80&w=2000"
+          alt="Lò gốm cổ"
           className="absolute inset-0 w-full h-full object-cover brightness-[0.65]"
         />
         <div className="absolute inset-0 flex items-center justify-center">
@@ -20,7 +20,7 @@ export default function AboutPage() {
       {/* Body Section */}
       <section className="max-w-6xl mx-auto px-6 lg:px-12 py-24">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-16 md:gap-24 items-start">
-          <div className="sticky top-32">
+          <div className="">
             <h2 className="font-serif text-3xl md:text-4xl leading-snug text-[#2D2926]">
               Chuyện Trong Tay - Nơi gốm sứ cất tiếng nói
             </h2>

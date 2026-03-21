@@ -8,12 +8,12 @@ const playfair = Playfair_Display({ subsets: ['latin', 'vietnamese'], variable: 
 const caveat = Caveat({ subsets: ['latin'], variable: '--font-caveat' })
 
 export const metadata: Metadata = {
-  title: 'Storytellers of Faifo',
+  title: 'Chuyện trog tay',
   description: 'Mỗi chiếc gốm là một câu chuyện. A cinematic journey through Hội An pottery craft.',
-  keywords: ['Hội An', 'Faifo', 'pottery', 'gốm', 'ceramic', 'NFC', 'storytelling', 'Vietnamese craft'],
-  authors: [{ name: 'Storytellers of Faifo' }],
+  keywords: ['Hội An', 'pottery', 'gốm', 'ceramic', 'NFC', 'storytelling', 'Vietnamese craft'],
+  authors: [{ name: 'Chuyện trong tay' }],
   openGraph: {
-    title: 'Storytellers of Faifo',
+    title: 'Chuyện trong tay',
     description: 'Mỗi chiếc gốm là một câu chuyện. Digital memories from Hội An.',
     type: 'website',
   },

@@ -66,7 +66,7 @@ export default function ChoiceScreen({ onChoice }: ChoiceScreenProps) {
                                     Cho Bạn
                                 </p>
                                 <p className="text-xs text-stone-600 leading-relaxed">
-                                    Gửi lời chúc cho một người đặc biệt — kèm theo câu chuyện của Faifo.
+                                    Gửi lời chúc cho một người đặc biệt — kèm theo câu chuyện của Chuyện Trong Tay.
                                 </p>
                             </div>
                         </div>
@@ -77,7 +77,7 @@ export default function ChoiceScreen({ onChoice }: ChoiceScreenProps) {
             {/* Footer */}
             <MaterialReveal delay={0.8} className="mt-12">
                 <p className="text-[10px] text-stone-700 text-center">
-                    Storytellers of Faifo · Handcrafted in Hội An
+                    CHUYỆN TRONG TAY · Handcrafted in Hội An
                 </p>
             </MaterialReveal>
         </motion.div >

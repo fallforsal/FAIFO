@@ -1,6 +1,7 @@
 'use server'
 
 import { supabaseServer } from '@/lib/supabase-server'
+import { revalidatePath } from 'next/cache'
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -13,26 +14,13 @@ export interface OrderData {
     total_amount: number
     shipping_fee: number
     payment_method: string
+    notes?: string // THÊM DÒNG NÀY: Để nhận ghi chú từ Store
 }
 
 export interface CartItem {
     product_id: string
     quantity: number
     unit_price: number
-}
-
-interface Order {
-    id: string
-    user_id: string | null
-    customer_name: string
-    customer_phone: string
-    customer_email: string | null
-    shipping_address: string
-    total_amount: number
-    shipping_fee: number
-    payment_method: string
-    status: string
-    created_at: string
 }
 
 interface ActionResult<T = undefined> {
@@ -44,84 +32,48 @@ interface ActionResult<T = undefined> {
 // ─── Actions ─────────────────────────────────────────────────────────────────
 
 /**
- * Create a new order with its items and decrement product stock.
- *
- * Flow:
- *  1. Insert into `orders` → get back `order_id`.
- *  2. Bulk insert all cart items into `order_items`.
- *  3. Decrement `stock_quantity` for every purchased product.
+ * Tạo đơn hàng mới sử dụng Stored Procedure (RPC) để đảm bảo tính nguyên tử (Atomic).
+ * Nếu một bước lỗi (ví dụ: hết hàng), toàn bộ quá trình sẽ được hủy bỏ tự động.
  */
 export async function createOrder(
     orderData: OrderData,
     cartItems: CartItem[],
-): Promise<ActionResult<Order>> {
+): Promise<ActionResult<{ order_id: string }>> {
     try {
-        // ── Step 1: Insert order ─────────────────────────────────────────
-        const { data: order, error: orderError } = await supabaseServer
-            .from('orders')
-            .insert({
-                user_id: orderData.user_id ?? null,
-                customer_name: orderData.customer_name,
-                customer_phone: orderData.customer_phone,
-                customer_email: orderData.customer_email ?? null,
-                shipping_address: orderData.shipping_address,
-                total_amount: orderData.total_amount,
-                shipping_fee: orderData.shipping_fee,
-                payment_method: orderData.payment_method,
-                status: 'pending',
-            })
-            .select()
-            .single()
-
-        if (orderError) {
-            console.error('[createOrder] insert order failed:', orderError)
-            return { success: false, error: orderError.message }
-        }
-
-        const orderId = order.id as string
-
-        // ── Step 2: Bulk insert order items ──────────────────────────────
-        const orderItems = cartItems.map((item) => ({
-            order_id: orderId,
-            product_id: item.product_id,
-            quantity: item.quantity,
-            unit_price: item.unit_price,
-        }))
-
-        const { error: itemsError } = await supabaseServer
-            .from('order_items')
-            .insert(orderItems)
-
-        if (itemsError) {
-            console.error('[createOrder] insert order_items failed:', itemsError)
-            return { success: false, error: itemsError.message }
-        }
-
-        // ── Step 3: Decrement stock for each product ─────────────────────
-        for (const item of cartItems) {
-            const { error: stockError } = await supabaseServer.rpc(
-                'decrement_stock',
-                {
-                    p_product_id: item.product_id,
-                    p_quantity: item.quantity,
+        // GỌI DUY NHẤT 1 HÀM RPC TRÊN DATABASE
+        const { data: orderId, error } = await supabaseServer.rpc(
+            'create_order_transaction',
+            {
+                p_order_data: {
+                    user_id: orderData.user_id ?? null,
+                    customer_name: orderData.customer_name,
+                    customer_phone: orderData.customer_phone,
+                    customer_email: orderData.customer_email ?? null,
+                    shipping_address: orderData.shipping_address,
+                    total_amount: orderData.total_amount,
+                    shipping_fee: orderData.shipping_fee,
+                    payment_method: orderData.payment_method,
+                    notes: orderData.notes ?? '', // TRUYỀN GHI CHÚ XUỐNG ĐÂY
                 },
-            )
-
-            if (stockError) {
-                console.error(
-                    `[createOrder] decrement stock failed for product ${item.product_id}:`,
-                    stockError,
-                )
-                return { success: false, error: stockError.message }
+                p_cart_items: cartItems // Truyền thẳng mảng sản phẩm
             }
+        )
+
+        if (error) {
+            console.error('[createOrder] Lỗi khi thực thi RPC:', error)
+            return { success: false, error: error.message }
         }
 
-        return { success: true, data: order as Order }
+        // PHÁ CACHE: Ép Next.js cập nhật lại số lượng tồn kho mới nhất ở trang Shop
+        revalidatePath('/shop')
+        revalidatePath('/shop/[id]', 'page')
+
+        return { success: true, data: { order_id: orderId as string } }
     } catch (err) {
-        console.error('[createOrder] unexpected error:', err)
+        console.error('[createOrder] Lỗi hệ thống bất ngờ:', err)
         return {
             success: false,
-            error: err instanceof Error ? err.message : 'Unknown error',
+            error: err instanceof Error ? err.message : 'Lỗi không xác định',
         }
     }
 }

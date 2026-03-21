@@ -69,7 +69,7 @@ export default function FlowB2({ onBack }: FlowB2Props) {
                         <MaterialReveal delay={1.4} className="text-center max-w-xs mt-4">
                             <p className="text-sm text-stone-600 leading-relaxed">
                                 Ký ức của bạn tại{' '}
-                                <span className="text-faifo-terracotta font-serif italic">Faifo</span>
+                                <span className="text-faifo-terracotta font-serif italic">Chuyện Trong Tay</span>
                                 {' '}vẫn luôn được lưu giữ cẩn thận ở đây.
                             </p>
                         </MaterialReveal>

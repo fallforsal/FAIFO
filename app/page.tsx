@@ -1,13 +1,14 @@
 import Link from 'next/link';
-import { cn } from '@/lib/utils';
+
 import { getProducts } from '@/app/actions/product.actions'; // Import hàm gọi DB
+import ProductCarousel from '@/components/shop/ProductCarousel';
 
 const formatPrice = (price: number) => {
   return price.toLocaleString('vi-VN') + ' đ';
 };
 
 export const metadata = {
-  title: 'FAIFO - Gốm Hội An',
+  title: 'CHUYỆN TRONG TAY - Gốm Hội An',
   description: 'Mang câu chuyện thổi vào đất nung',
 };
 
@@ -56,63 +57,25 @@ export default async function HomePage() {
       </section>
 
       {/* Featured Products Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white">
-        <div className="mx-auto max-w-7xl space-y-12">
-          <div className="space-y-4">
-            <h2 className="font-serif text-4xl font-light text-[#2D2926]">
+      <section className="py-24 px-4 sm:px-6 lg:px-8 bg-white overflow-hidden">
+        <div className="mx-auto max-w-7xl">
+          <div className="space-y-4 mb-16 text-center sm:text-left">
+            <h2 className="font-serif text-3xl sm:text-4xl font-light text-[#2D2926] tracking-tight">
               Sản phẩm nổi bật
             </h2>
-            <p className="text-[#2D2926]/60 font-sans">
-              Khám phá các tác phẩm gốm sứ được chọn lọc
-            </p>
+
           </div>
 
-          {/* Horizontal Scroll Carousel */}
-          <div className="overflow-x-auto scroll-smooth hide-scrollbar">
-            <div className="flex gap-8 pb-8">
-              {featuredProducts.length > 0 ? (
-                featuredProducts.map((product) => {
-                  // Xử lý an toàn ảnh thumbnail
-                  const thumbnailUrl = Array.isArray(product.images) && product.images.length > 0
-                    ? product.images[0]
-                    : 'https://images.unsplash.com/photo-1610701596007-11502861dcfa?q=80&w=800';
+          {/* Carousel Component mới - Xử lý nút bấm và vuốt */}
+          <ProductCarousel products={featuredProducts} />
 
-                  return (
-                    <div
-                      key={product.id}
-                      className="flex-shrink-0 w-80 group snap-start"
-                    >
-                      <Link href={`/shop/${product.id}`}>
-                        <div className="space-y-6">
-                          {/* Product Image */}
-                          <div className="relative h-80 overflow-hidden bg-[#FDF9F3]">
-                            <img
-                              src={thumbnailUrl}
-                              alt={product.name}
-                              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                            />
-                          </div>
-
-                          {/* Product Info */}
-                          <div className="space-y-2 text-center">
-                            <h3 className="font-serif text-lg text-[#2D2926] uppercase tracking-wide truncate">
-                              {product.name}
-                            </h3>
-                            <p className="font-serif text-lg text-[#2D2926]">
-                              {formatPrice(product.price)}
-                            </p>
-                          </div>
-                        </div>
-                      </Link>
-                    </div>
-                  );
-                })
-              ) : (
-                <div className="w-full text-center py-10 font-serif text-[#2D2926]/60">
-                  Chưa có sản phẩm nào.
-                </div>
-              )}
-            </div>
+          <div className="mt-16 text-center">
+            <Link
+              href="/shop"
+              className="inline-block px-10 py-3 border border-[#2D2926]/20 text-[#2D2926] font-serif uppercase tracking-[0.2em] text-[11px] hover:bg-[#2D2926] hover:text-[#FDF9F3] transition-all duration-500"
+            >
+              Xem tất cả sản phẩm
+            </Link>
           </div>
         </div>
       </section>
