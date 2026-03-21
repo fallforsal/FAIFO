@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useCartStore } from '@/store/useCartStore';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Minus, Plus } from 'lucide-react'; // Import thêm icon Plus, Minus
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import { createOrder } from '@/app/actions/order.actions';
@@ -27,9 +27,13 @@ const InputField = ({ label, name, type = "text", required = true, placeholder =
 
 export default function CheckoutPage() {
   const router = useRouter();
-  const { items, note, updateNote, getTotalPrice, clearCart } = useCartStore();
+  // Lấy thêm hàm updateQuantity từ store
+  const { items, note, updateNote, getTotalPrice, clearCart, updateQuantity } = useCartStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState('cod');
+
+  // State để hiển thị lỗi "xịn xò" thay cho alert
+  const [error, setError] = useState<string | null>(null);
 
   const totalPrice = getTotalPrice();
   const shippingFee = paymentMethod === 'cod' ? 30000 : 0;
@@ -39,9 +43,9 @@ export default function CheckoutPage() {
     if (items.length === 0) return;
 
     setIsSubmitting(true);
+    setError(null); // Reset lỗi mỗi lần bấm
 
     try {
-      // 1. Lấy data từ Form
       const formData = new FormData(e.currentTarget);
 
       const orderPayload = {
@@ -55,28 +59,38 @@ export default function CheckoutPage() {
         notes: note
       };
 
-      // 2. Chuyển đổi định dạng cart items cho API
       const cartItemsForDb = items.map(item => ({
         product_id: item.id,
         quantity: item.quantity,
         unit_price: item.price
       }));
 
-      // 3. Gọi Server Action (Ghi vào DB + Trừ kho)
       const result = await createOrder(orderPayload, cartItemsForDb);
 
       if (result.success) {
-        // 4. Thành công: Xóa giỏ và biến mất!
         clearCart();
         router.push(`/checkout/success?orderId=${result.data?.order_id}`);
       } else {
-        // Hiển thị lỗi từ DB (ví dụ: Hết hàng)
-        alert(`Đặt hàng thất bại: ${result.error}`);
+        // HIỆN LỖI LÊN UI (Ví dụ: Sản phẩm X chỉ còn Y cái)
+        setError(result.error || "Đặt hàng thất bại. Vui lòng thử lại.");
+
+        // Cuộn lên đầu trang để khách thấy lỗi
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       }
-    } catch (error) {
-      alert("Đã có lỗi hệ thống xảy ra. Vui lòng thử lại sau.");
+    } catch (err) {
+      setError("Đã có lỗi hệ thống xảy ra. Vui lòng kiểm tra kết nối và thử lại.");
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  // Hàm xử lý tăng giảm số lượng
+  const handleQuantityChange = (id: string, currentQty: number, change: number) => {
+    const newQty = currentQty + change;
+    if (newQty >= 1) {
+      // Đảm bảo ông có hàm này trong useCartStore nhé
+      updateQuantity(id, newQty);
     }
   };
 
@@ -89,6 +103,19 @@ export default function CheckoutPage() {
           </Link>
           <h1 className="text-4xl font-light mt-4">Thanh toán</h1>
         </div>
+
+        {/* BANNER HIỂN THỊ LỖI KHI ĐẶT HÀNG (Thay thế cho alert) */}
+        {error && (
+          <div className="mb-8 bg-red-50 text-red-600 font-sans text-sm p-4 rounded-md border border-red-200 shadow-sm flex items-start gap-3 animate-in fade-in slide-in-from-top-4">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 shrink-0 text-red-500 mt-0.5" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+            </svg>
+            <div>
+              <span className="font-semibold block mb-1">Rất tiếc, đã có lỗi xảy ra!</span>
+              {error}
+            </div>
+          </div>
+        )}
 
         <form onSubmit={handleCheckout} className="grid lg:grid-cols-12 gap-12 items-start">
           {/* Cột Trái: Thông tin Giao hàng & Thanh toán */}
@@ -108,6 +135,7 @@ export default function CheckoutPage() {
                 </div>
               </div>
             </section>
+
             {/* Section 2: Ghi chú đơn hàng */}
             <section className="animate-in fade-in slide-in-from-bottom-4 duration-700">
               <h2 className="text-2xl mb-6 border-b border-[#2D2926]/10 pb-4">Ghi chú đơn hàng</h2>
@@ -123,6 +151,7 @@ export default function CheckoutPage() {
                 />
               </div>
             </section>
+
             {/* Section 3: Phương thức thanh toán */}
             <section>
               <h2 className="text-2xl mb-6 border-b border-[#2D2926]/10 pb-4">Phương thức thanh toán</h2>
@@ -143,7 +172,6 @@ export default function CheckoutPage() {
                     />
                     <span className="font-medium text-[15px]">Thẻ thanh toán quốc tế (Visa / Mastercard / JCB)</span>
                   </div>
-                  {/* Form Nhập thẻ giả */}
                   {paymentMethod === 'credit-card' && (
                     <div className="mt-4 pt-4 border-t border-[#2D2926]/10 grid grid-cols-2 gap-4">
                       <div className="col-span-2">
@@ -170,7 +198,6 @@ export default function CheckoutPage() {
                     />
                     <span className="font-medium text-[15px]">Thanh toán qua Ví điện tử (VNPay / MoMo)</span>
                   </div>
-                  {/* Fake QR UI */}
                   {paymentMethod === 'ewallet' && (
                     <div className="mt-4 pt-4 border-t border-[#2D2926]/10">
                       <div className="bg-gray-50 p-4 border rounded-md text-center">
@@ -198,7 +225,6 @@ export default function CheckoutPage() {
                     />
                     <span className="font-medium text-[15px]">Thẻ ATM nội địa (Internet Banking)</span>
                   </div>
-                  {/* Fake QR UI cho ATM */}
                   {paymentMethod === 'atm' && (
                     <div className="mt-4 pt-4 border-t border-[#2D2926]/10">
                       <div className="bg-gray-50 p-4 border rounded-md text-center">
@@ -226,7 +252,6 @@ export default function CheckoutPage() {
                     />
                     <span className="font-medium text-[15px]">Thanh toán khi nhận hàng (COD)</span>
                   </div>
-                  {/* Note cho COD */}
                   {paymentMethod === 'cod' && (
                     <div className="mt-4 pt-4 border-t border-[#2D2926]/10">
                       <p className="text-sm text-[#2D2926]/60 italic text-center">
@@ -260,8 +285,30 @@ export default function CheckoutPage() {
                       </div>
                       <div className="flex-grow flex flex-col justify-center">
                         <h3 className="text-sm font-medium line-clamp-2 leading-relaxed">{item.name}</h3>
+
+                        {/* Khu vực tăng giảm số lượng & Giá */}
                         <div className="flex justify-between items-end mt-3">
-                          <span className="text-sm text-[#2D2926]/60">SL: {item.quantity}</span>
+
+                          {/* Nút bấm + / - */}
+                          <div className="flex items-center gap-3 border border-[#2D2926]/20 rounded px-2 py-1 bg-white">
+                            <button
+                              type="button"
+                              onClick={() => handleQuantityChange(item.id, item.quantity, -1)}
+                              disabled={item.quantity <= 1}
+                              className="text-[#2D2926]/60 hover:text-[#2D2926] disabled:opacity-30 focus:outline-none transition-colors"
+                            >
+                              <Minus size={12} strokeWidth={2} />
+                            </button>
+                            <span className="text-xs font-medium w-4 text-center">{item.quantity}</span>
+                            <button
+                              type="button"
+                              onClick={() => handleQuantityChange(item.id, item.quantity, 1)}
+                              className="text-[#2D2926]/60 hover:text-[#2D2926] focus:outline-none transition-colors"
+                            >
+                              <Plus size={12} strokeWidth={2} />
+                            </button>
+                          </div>
+
                           <span className="font-semibold text-[15px]">{(item.price * item.quantity).toLocaleString('vi-VN')} đ</span>
                         </div>
                       </div>
