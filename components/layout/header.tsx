@@ -7,8 +7,8 @@ import { cn } from '@/lib/utils';
 import { CartSidebar } from '@/components/shop/cart-sidebar';
 import { useCartStore } from '@/store/useCartStore';
 import { useRouter } from 'next/navigation';
-import { createClient } from '@/utils/supabase/client'; // Import client-side supabase
-import { logout } from '@/app/actions/auth.actions';   // Import hàm logout server action
+import { createClient } from '@/utils/supabase/client';
+import { logout } from '@/app/actions/auth.actions';
 import { User } from '@supabase/supabase-js';
 
 export function ShopHeader() {
@@ -16,12 +16,13 @@ export function ShopHeader() {
   const [searchQuery, setSearchQuery] = useState('');
   const [isMobileShopOpen, setIsMobileShopOpen] = useState(false);
 
-  // 1. THÊM STATE ĐỂ LƯU THÔNG TIN USER
+  // STATE MỚI: Điều khiển thanh Search trên Mobile
+  const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
+
   const [user, setUser] = useState<User | null>(null);
   const supabase = createClient();
   const router = useRouter();
 
-  // 2. LẮNG NGHE TRẠNG THÁI ĐĂNG NHẬP KHI COMPONENT MOUNT
   useEffect(() => {
     const fetchUser = async () => {
       const { data: { user } } = await supabase.auth.getUser();
@@ -29,7 +30,6 @@ export function ShopHeader() {
     };
     fetchUser();
 
-    // Tự động cập nhật Header nếu trạng thái Auth thay đổi (Login/Logout)
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
     });
@@ -46,21 +46,23 @@ export function ShopHeader() {
     e.preventDefault();
     if (searchQuery.trim()) {
       router.push(`/shop?q=${encodeURIComponent(searchQuery)}`);
+      setIsMobileSearchOpen(false); // Đóng thanh search sau khi tìm kiếm
+      setIsMenuOpen(false); // Đóng menu nếu đang mở
     }
   };
 
   const handleLogoutClick = async () => {
     await logout();
     setUser(null);
-    router.refresh(); // Ép trang web render lại để cập nhật quyền truy cập
+    router.refresh();
   };
 
   return (
     <>
       <header className="sticky top-0 z-40 w-full border-b border-[#2D2926]/10 bg-[#FDF9F3] text-[#2D2926]">
-        <div className="mx-auto px-4 sm:px-6 lg:px-8 py-5">
+        <div className="mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-5">
 
-          {/* DESKTOP LAYOUT */}
+          {/* DESKTOP LAYOUT (Giữ nguyên của ông) */}
           <div className="hidden lg:flex items-center justify-between">
             <div className="flex-1 flex justify-start">
               <Link href="/" className="font-serif uppercase text-[22px] tracking-wider hover:opacity-80 transition-opacity flex items-center gap-3">
@@ -86,20 +88,14 @@ export function ShopHeader() {
 
             <div className="flex-1 flex justify-end items-center gap-6">
               <form onSubmit={handleSearch} className="flex items-center border-b border-[#2D2926]/30 pb-1">
-                <input
-                  type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Tìm kiếm..." className="bg-transparent border-none outline-none text-[11px] font-sans font-light w-24 focus:w-32 transition-all placeholder:text-[#2D2926]/40 uppercase tracking-widest"
-                />
+                <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Tìm kiếm..." className="bg-transparent border-none outline-none text-[11px] font-sans font-light w-24 focus:w-32 transition-all placeholder:text-[#2D2926]/40 uppercase tracking-widest" />
                 <button type="submit"><Search size={14} strokeWidth={1.5} className="text-[#2D2926]/80" /></button>
               </form>
 
-              {/* 3. ĐỔI NÚT ĐĂNG NHẬP / ĐĂNG XUẤT TRÊN DESKTOP */}
               {user ? (
                 <div className="flex items-center gap-4">
                   <span className="text-[10px] uppercase tracking-widest font-sans text-[#2D2926]/60">Chào, {user.user_metadata?.full_name?.split(' ').pop() || 'Bạn'}</span>
-                  <button onClick={handleLogoutClick} className="hover:text-[#C0593E] transition-colors" title="Đăng xuất">
-                    <LogOut size={16} strokeWidth={1.5} />
-                  </button>
+                  <button onClick={handleLogoutClick} className="hover:text-[#C0593E] transition-colors" title="Đăng xuất"><LogOut size={16} strokeWidth={1.5} /></button>
                 </div>
               ) : (
                 <Link href="/login" className="font-serif uppercase text-xs tracking-widest hover:text-[#2D2926]/60 transition-colors">Đăng nhập</Link>
@@ -115,24 +111,53 @@ export function ShopHeader() {
 
               <button onClick={() => openCart()} className="relative hover:text-[#2D2926]/60 transition-colors p-1 group">
                 <ShoppingCart size={18} strokeWidth={1.5} />
-                {cartQuantity > 0 && (
-                  <span className="absolute -right-1 -top-1 flex h-[16px] w-[16px] items-center justify-center rounded-full bg-[#2D2926] text-[#FDF9F3] text-[9px] font-sans group-hover:scale-110 transition-transform">{cartQuantity}</span>
-                )}
+                {cartQuantity > 0 && <span className="absolute -right-1 -top-1 flex h-[16px] w-[16px] items-center justify-center rounded-full bg-[#2D2926] text-[#FDF9F3] text-[9px] font-sans group-hover:scale-110 transition-transform">{cartQuantity}</span>}
               </button>
             </div>
           </div>
 
-          {/* MOBILE LAYOUT */}
-          <div className="flex lg:hidden items-center justify-between">
-            <button onClick={() => setIsMenuOpen(true)} className="p-2 -ml-2 text-[#2D2926]"><Menu size={22} strokeWidth={1.5} /></button>
-            <Link href="/" className="font-serif uppercase text-[15px] sm:text-lg tracking-wider font-medium absolute left-1/2 -translate-x-1/2 whitespace-nowrap">Chuyện Trong Tay</Link>
-            <div className="flex items-center gap-3">
-              <button className="p-1"><Search size={20} strokeWidth={1.5} /></button>
-              <button onClick={() => openCart()} className="relative p-1">
-                <ShoppingCart size={20} strokeWidth={1.5} />
-                {cartQuantity > 0 && <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-[#2D2926] text-[#FDF9F3] text-[9px] font-sans">{cartQuantity}</span>}
-              </button>
-            </div>
+          {/* BẢN NÂNG CẤP: MOBILE LAYOUT */}
+          <div className="flex lg:hidden items-center justify-between relative h-8">
+            {!isMobileSearchOpen ? (
+              <>
+                <button onClick={() => setIsMenuOpen(true)} className="p-2 -ml-2 text-[#2D2926] hover:opacity-70 transition-opacity">
+                  <Menu size={22} strokeWidth={1.5} />
+                </button>
+
+                <Link href="/" className="font-serif uppercase text-[15px] sm:text-lg tracking-wider font-medium absolute left-1/2 -translate-x-1/2 whitespace-nowrap">
+                  Chuyện Trong Tay
+                </Link>
+
+                <div className="flex items-center gap-1">
+                  {/* Nút bật Search bar */}
+                  <button onClick={() => setIsMobileSearchOpen(true)} className="p-2 hover:opacity-70 transition-opacity">
+                    <Search size={20} strokeWidth={1.5} />
+                  </button>
+                  <button onClick={() => openCart()} className="relative p-2">
+                    <ShoppingCart size={20} strokeWidth={1.5} />
+                    {cartQuantity > 0 && <span className="absolute right-0 top-0 flex h-4 w-4 items-center justify-center rounded-full bg-[#2D2926] text-[#FDF9F3] text-[9px] font-sans">{cartQuantity}</span>}
+                  </button>
+                </div>
+              </>
+            ) : (
+              // Trạng thái khi mở Search Bar
+              <div className="w-full flex items-center justify-between gap-3 animate-in fade-in slide-in-from-right-4 duration-300">
+                <form onSubmit={handleSearch} className="flex-1 flex items-center bg-[#2D2926]/5 rounded-full px-4 h-10 border border-[#2D2926]/10">
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="TÌM SẢN PHẨM..."
+                    autoFocus
+                    className="bg-transparent border-none outline-none w-full text-xs font-sans uppercase tracking-widest placeholder:text-[#2D2926]/40 text-[#2D2926]"
+                  />
+                  <button type="submit" className="text-[#2D2926]/60 hover:text-[#2D2926]"><Search size={16} strokeWidth={1.5} /></button>
+                </form>
+                <button onClick={() => setIsMobileSearchOpen(false)} className="p-1 text-[#2D2926]/60 hover:text-[#2D2926] shrink-0">
+                  <X size={22} strokeWidth={1.5} />
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </header>
@@ -146,11 +171,9 @@ export function ShopHeader() {
         </div>
 
         <nav className="flex-1 overflow-y-auto font-serif py-8 px-6 space-y-8 bg-[#FDF9F3]">
-          <form onSubmit={handleSearch} className="flex items-center border-b border-[#2D2926]/30 pb-2 mb-8">
-            <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="Tìm kiếm..." className="bg-transparent border-none outline-none text-[13px] w-full uppercase tracking-widest" />
-            <button type="submit"><Search size={16} strokeWidth={1.5} /></button>
-          </form>
+          {/* ĐÃ XÓA FORM TÌM KIẾM Ở ĐÂY VÌ ĐÃ MANG LÊN HEADER */}
 
+          {/* Thêm onClick={() => setIsMenuOpen(false)} cho tất cả để tự đóng menu */}
           <Link href="/about" className="block text-[13px] uppercase tracking-widest" onClick={() => setIsMenuOpen(false)}>Câu chuyện</Link>
 
           <div className="space-y-4">
@@ -170,7 +193,6 @@ export function ShopHeader() {
           <Link href="/contact" className="block text-[13px] uppercase tracking-widest" onClick={() => setIsMenuOpen(false)}>Liên hệ</Link>
         </nav>
 
-        {/* 4. ĐỔI NÚT ĐĂNG NHẬP / ĐĂNG XUẤT TRÊN MOBILE */}
         <div className="p-6 border-t border-[#2D2926]/10 space-y-8 font-serif bg-[#FDF9F3] shrink-0">
           {user ? (
             <div className="space-y-4">

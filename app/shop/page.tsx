@@ -37,7 +37,7 @@ export default function ShopPage({ searchParams }: {
     <div className="w-full bg-[#FDF9F3] text-[#2D2926] font-light min-h-screen flex flex-col pt-4 sm:pt-8 pb-12 selection:bg-[#2D2926]/10">
 
       {/* HEADER SECTION: Động dựa trên Category */}
-      <section className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pt-12 pb-16">
+      <section className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pt-8 md:pt-12 pb-16">
         {!info ? (
           /* KIỂU MẶC ĐỊNH (Khi chưa chọn Category) */
           <div className="text-center py-10">
@@ -50,26 +50,35 @@ export default function ShopPage({ searchParams }: {
             </p>
           </div>
         ) : (
-          /* KIỂU TO-SAI (Khi đã chọn Category) */
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            {/* Bên trái: Giới thiệu */}
-            <div className="space-y-6 order-2 md:order-1">
-              <h1 className="font-serif text-4xl md:text-5xl font-extralight tracking-wider text-[#2D2926] uppercase">
+          /* KIỂU TO-SAI (Chữ trên ảnh dưới trên Mobile, 2 cột trên Desktop) */
+          <div className="flex flex-col md:flex-row items-center gap-10 md:gap-16 lg:gap-24">
+
+            {/* CHỮ (Trên cùng ở Mobile, Bên trái ở Desktop) */}
+            <div className="w-full md:w-1/2 space-y-6 flex flex-col items-center md:items-start text-center md:text-left order-1">
+              <span className="font-serif text-[11px] text-[#2D2926]/60 tracking-[0.3em] uppercase block">
+                Danh mục sản phẩm
+              </span>
+              <h1 className="font-serif text-4xl lg:text-5xl font-extralight tracking-wider text-[#2D2926] uppercase leading-tight">
                 {info.title}
               </h1>
-              <p className="max-w-md text-[14px] font-sans text-[#2D2926]/70 leading-relaxed italic">
+              <p className="max-w-md text-[14px] font-sans text-[#2D2926]/80 leading-relaxed italic">
                 {info.description}
               </p>
             </div>
 
-            {/* Bên phải: Hình minh họa to */}
-            <div className="relative aspect-[16/9] md:aspect-[4/3] overflow-hidden bg-white/20 order-1 md:order-2">
-              <img
-                src={info.image}
-                alt={info.title}
-                className="w-full h-full object-cover mix-blend-multiply opacity-90 transition-opacity duration-700"
-              />
+            {/* ẢNH (Dưới cùng ở Mobile, Bên phải ở Desktop) */}
+            <div className="w-full md:w-1/2 order-2">
+              {/* Xóa bỏ aspect-[4/3] cứng, để container ôm trọn theo ảnh gốc */}
+              <div className="relative w-full overflow-hidden rounded-lg border border-[#2D2926]/5 shadow-sm bg-transparent">
+                <img
+                  src={info.image}
+                  alt={info.title}
+                  // Dùng h-auto và object-contain để không bao giờ bị cắt xén một pixel nào
+                  className="w-full h-auto object-contain transition-transform duration-700 hover:scale-105"
+                />
+              </div>
             </div>
+
           </div>
         )}
       </section>
