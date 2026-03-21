@@ -25,7 +25,7 @@ const CATEGORY_INFO: Record<string, { title: string; description: string; image:
   "Bình Hoa": {
     title: "BÌNH HOA",
     description: "Sự giao thoa giữa hoa lá và đất nung. Những dáng bình thanh thoát giúp không gian sống trở nên thơ mộng và tràn đầy cảm hứng.",
-    image: "vasenghethuat.png"
+    image: "batdianghethuat4.jpg"
   }
 };
 export default function ShopPage({ searchParams }: {
@@ -36,47 +36,45 @@ export default function ShopPage({ searchParams }: {
   return (
     <div className="w-full bg-[#FDF9F3] text-[#2D2926] font-light min-h-screen flex flex-col pt-4 sm:pt-8 pb-12 selection:bg-[#2D2926]/10">
 
-      {/* HEADER SECTION: Động dựa trên Category */}
-      <section className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pt-8 md:pt-12 pb-16">
+      {/* HEADER SECTION: CHUẨN TO-SAI - CHIA ĐÔI & TỶ LỆ ẢNH LƠ LỬNG */}
+      <section className="w-screen ml-[calc(50%-50vw)] border-b border-[#2D2926]/10 mb-12 bg-[#FDF9F3]">
         {!info ? (
-          /* KIỂU MẶC ĐỊNH (Khi chưa chọn Category) */
-          <div className="text-center py-10">
-            <h1 className="font-serif text-3xl sm:text-[2.75rem] font-extralight tracking-tight text-[#2D2926] mb-8 leading-tight uppercase">
+          /* KIỂU MẶC ĐỊNH */
+          <div className="text-center py-16 lg:py-24 px-4 max-w-7xl mx-auto">
+            <h1 className="font-serif text-3xl sm:text-4xl font-extralight tracking-widest text-[#2D2926] mb-6 uppercase">
               Bộ Sưu Tập Gốm
             </h1>
-            <p className="max-w-2xl mx-auto text-[13px] font-sans text-[#2D2926]/60 leading-relaxed font-light tracking-wide">
+            <p className="max-w-2xl mx-auto text-[13px] font-sans text-[#2D2926]/60 leading-loose tracking-wide font-light">
               Chút hoài niệm Hội An trong từng nếp gốm chế tác thủ công. <br className="hidden sm:block" />
               Nơi vẻ đẹp tối giản đan xen cùng dòng chảy thời gian.
             </p>
           </div>
         ) : (
-          /* KIỂU TO-SAI (Chữ trên ảnh dưới trên Mobile, 2 cột trên Desktop) */
-          <div className="flex flex-col md:flex-row items-center gap-10 md:gap-16 lg:gap-24">
+          /* CẤU TRÚC 2 CỘT: Dùng Flexbox an toàn, ép chiều cao h-[400px] */
+          <div className="flex flex-col md:flex-row w-full h-auto md:h-[380px] lg:h-[450px]">
 
-            {/* CHỮ (Trên cùng ở Mobile, Bên trái ở Desktop) */}
-            <div className="w-full md:w-1/2 space-y-6 flex flex-col items-center md:items-start text-center md:text-left order-1">
-              <span className="font-serif text-[11px] text-[#2D2926]/60 tracking-[0.3em] uppercase block">
-                Danh mục sản phẩm
-              </span>
-              <h1 className="font-serif text-4xl lg:text-5xl font-extralight tracking-wider text-[#2D2926] uppercase leading-tight">
-                {info.title}
-              </h1>
-              <p className="max-w-md text-[14px] font-sans text-[#2D2926]/80 leading-relaxed italic">
-                {info.description}
-              </p>
+            {/* CỘT 1 (Bên trái): Nền tệp với web, căn giữa Text */}
+            <div className="w-full md:w-1/2 flex justify-center items-center px-6 py-16 md:py-0 bg-[#FDF9F3]">
+              <div className="w-full max-w-md flex flex-col items-center text-center space-y-5">
+                <h1 className="font-serif text-3xl sm:text-4xl lg:text-[2.5rem] font-extralight tracking-[0.2em] text-[#2D2926] uppercase leading-tight">
+                  {info.title}
+                </h1>
+                <p className="text-[13px] md:text-[14px] font-sans text-[#2D2926]/80 leading-relaxed font-light tracking-wide">
+                  {info.description}
+                </p>
+              </div>
             </div>
 
-            {/* ẢNH (Dưới cùng ở Mobile, Bên phải ở Desktop) */}
-            <div className="w-full md:w-1/2 order-2">
-              {/* Xóa bỏ aspect-[4/3] cứng, để container ôm trọn theo ảnh gốc */}
-              <div className="relative w-full overflow-hidden rounded-lg border border-[#2D2926]/5 shadow-sm bg-transparent">
-                <img
-                  src={info.image}
-                  alt={info.title}
-                  // Dùng h-auto và object-contain để không bao giờ bị cắt xén một pixel nào
-                  className="w-full h-auto object-contain transition-transform duration-700 hover:scale-105"
-                />
-              </div>
+            {/* CỘT 2 (Bên phải): Thêm bg-đen 2% để phân tách tinh tế như To-sai */}
+            {/* overflow-hidden khóa chặt, không cho bất kỳ thứ gì tràn ra ngoài */}
+            <div className="w-full md:w-1/2 flex justify-center items-center bg-[#2D2926]/[0.02] relative overflow-hidden py-12 md:py-0">
+              <img
+                src={info.image}
+                alt={info.title}
+                // CHÌA KHÓA: Đổi w-full h-full thành max-w-[75%] max-h-[75%]. 
+                // Ảnh sẽ luôn nhỏ hơn khung chứa 25%, lơ lửng ở giữa đúng phong cách vẽ tay.
+                className="max-w-[75%] max-h-[75%] object-contain mix-blend-darken transition-transform duration-700 hover:scale-105"
+              />
             </div>
 
           </div>

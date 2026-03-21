@@ -62,20 +62,20 @@ export function Footer() {
             </h3>
             <ul className="space-y-2">
               <li>
-                <a
-                  href="#"
+                <Link
+                  href="/contact"
                   className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
                 >
                   Liên Hệ
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="#"
+                <Link
+                  href="/privacy-policy"
                   className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
                 >
                   Chính sách bảo mật
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -88,7 +88,9 @@ export function Footer() {
             <ul className="space-y-2">
               <li>
                 <a
-                  href="#"
+                  href="https://www.instagram.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
                 >
                   Instagram
@@ -96,7 +98,9 @@ export function Footer() {
               </li>
               <li>
                 <a
-                  href="#"
+                  href="https://www.facebook.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
                 >
                   Facebook
